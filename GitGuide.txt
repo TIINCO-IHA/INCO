@@ -1,0 +1,33 @@
+Alle kommandoer for git starter med 'g'
+
+Når du står i dit git repository står der [master] med blåskrift.
+Hvis ikke der står andet har du ikke ændret på noget siden du sidst hentede informationer ned
+
+Hvis der står rød tal efter har du ændret/tilføjet nogle filer.
+Disse skal tilføjes til Git-"databasen" 
+
+g add .
+Dette vil markere dem som "tilføjet"
+Teksten skifter nu til grøn
+
+Når filerne er "tilføjet" skal de gemmes som et commit
+g cma "Kort beskrivelse"
+Dette står for 'git commit -a -m' (commit all message)
+Dette gemmer alle de filer der ligger i dit repository samlet.
+Man kan hente disse frem, så hvis man gemmer tit kan man hente mange små ændringer
+
+Filer ligger stadig kun på din computer
+Push disse, så andre kan se dem
+g ps
+Står for 'git push'
+
+HVIS DEN MELDER FEJL:
+Der er muligvis kommet et nyere push end dit
+Hente dette med 
+g pl
+Står for git pull
+
+Hvis du stadig ikke kan pushe er der en konflikt.
+For windows:
+g mt
+Dette åbner en terminal, som Rasmus sætter dig ind i, skulle det blive aktuelt.
