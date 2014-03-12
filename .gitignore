@@ -62,7 +62,7 @@
 *.tks
 
 /Document/*.pdf
-/Document/**/*.pdf
+/Report/**/*.pdf
 
 ####### Temporary folders ####### 
 [Bb]in
