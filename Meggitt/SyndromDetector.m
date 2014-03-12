@@ -25,6 +25,6 @@ syndrome = mod(vector*parmat',2);
 outcome = TriAnd(syndrome(1,1), syndrome(1,2), syndrome(1,3));
 
 %Return the feedback
-feedback = syndrom(1,3);
+feedback = syndrome(1,3);
 
 end
