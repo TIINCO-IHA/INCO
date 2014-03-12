@@ -1,7 +1,7 @@
 % main-funktion til encoding af cyclic codes og meggitt decoding
 clear all, close all, clc;
 addpath('../Encoder');
-% addpath('../Meggitt');
+addpath('../Meggitt');
 
 % Generate message vector
 n = 15;
@@ -27,3 +27,6 @@ r(errorlocation) = mod(c(errorlocation)+1,2);
 
 % Decode the received vector by the meggitt decoder
 
+res = Meggitt(r)
+
+isequal(c, res)
