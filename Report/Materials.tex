@@ -5,6 +5,30 @@
 
 (Teori om encoding og decoding)
 
-(Matematisk eksempel)
+%(Matematisk eksempel)
+
+\noindent Encoding for the code vector in systematic form:
+\begin{equation}
+X^{n-k}m(X) = q(X)g(X)+p(X)
+\end{equation}
+
+\noindent By adding the redundancy polynomial to the shifted message polynomial, the encoded vector in systematic form is obtained.
+\begin{equation}
+c(X) = X^{n-k}m(X)+p(X)
+\end{equation}
+
+\noindent A concrete example with the generator polynomial $g(X)=1+X^4+X^6+X^7+X^8$ is used to encode the following message polynomial:
+$m(X)=1+X^2+X^4+X^6$. The code is a cyclic code, $C_{cyc}(15,7)$.
+
+\noindent First the message is right shifted $n-k$ times.
+\begin{equation}
+X^{15-7}m(X) = X^8+X^{10}+X^{12}+X^{14}
+\end{equation}
+
+\noindent Find $p(X)$ by taking the remainder from $X^{n-k}m(x)$ divided by $g(X)$.
+
+\begin{equation}
+X^8
+\end{equation}
 
 \end{document}
