@@ -1,0 +1,23 @@
+\documentclass[Main]{subfiles}
+
+\begin{document}
+\section*{Encoder}
+
+English text!
+
+\begin{lstlisting}[caption=Matlab script for exercise 3.2, style=Code-Matlab, label=lst:3.2]
+g = [1 1 1 1 0 0 0 0];
+pol = cyclpoly(8,5);
+[parmat,genmat,k] = cyclgen(8,pol);
+genmat
+
+if genmat(1,:) == g
+    disp('Equal')
+else
+    disp('Not equal')
+end
+
+valid_code = encode(m, 8, 5, 'cyclic', pol)
+\end{lstlisting}
+
+\end{document}
