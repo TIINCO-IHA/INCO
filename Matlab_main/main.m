@@ -13,7 +13,7 @@ g = [1 0 0 0 1 0 1 1 1];
 m = mod(randi(2,1,k),2);
 
 % Encode message vector by the ciclic code encoder
-c = cyclicEncoding(g,m,n,k);
+c = cyclicEncoding(g,m,n,k)
 
 % Transmit code vector through an artificial communication channel, i.e.,
 % introduce errors to the code vector
@@ -34,4 +34,6 @@ r(errorlocation) = mod(c(errorlocation)+1,2);
 
 res = Meggitt(r)
 
-isequal(c, res)
+%isequal(c, res)
+r
+c

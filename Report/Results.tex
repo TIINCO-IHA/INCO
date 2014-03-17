@@ -3,10 +3,32 @@
 \begin{document}
 \section{Results and Discussion}
 
-(Giv et input til encoderen --> bliver til)
+%(Giv et input til encoderen --> bliver til)
 
-(Giv et input til decoderen --> bliver til)
+%(Giv et input til decoderen --> bliver til)
+The Meggitt decoder can be tested with the script in \codeTitle \ref{lst:MeggitTest}.
+The wanted encoder should return $v(x)$ but has an error, $r(x)$, which must be decoded.
+If the value from $isequal$ returns '1' the output is the same as $v(x)$.
 
+\begin{lstlisting}[caption=Meggitt test script, style=Code-Matlab, label=lst:MeggitTest]
+%Meggitt decoder
+clc, clear
+
+%v(x) - wanted value
+v = [1 0 0 1 0 1 1];
+
+%r(x) - v(x) with an error
+r = [1 0 0 1 0 0 1];
+
+res = Meggitt(r)
+
+Equal = isequal(v, res)
+\end{lstlisting}
+
+$res = [1 0 0 1 0 1 1]$
+\\
+\\
+$Equal = 1 $
 (Fejlretning, hvor mange fejl kan vi rette?)
 
 \end{document}

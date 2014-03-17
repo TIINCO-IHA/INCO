@@ -1,13 +1,13 @@
 clc, clear
-
 %Meggitt decoder
 
-%v(x)
-v = [1 0 0 1 0 1 1];
+r = [0 1 1 1 0 1 1 0 0 1 0 1 0 0 0];
+c = [0 1 1 1 0 1 1 0 0 1 0 1 0 0 0];
 
-%r(x) with error
-r = [1 0 0 1 0 0 1];
+pol = [1 0 0 0 1 0 1 1 1];
+n = 15;
+k = 7;
 
-res = Meggitt(r)
-
-isequal(v, r)
+[errVec, codeVec, tag] = Meggitt(r, pol, n, k);
+Equal = isequal(c, codeVec)
+%syndrome = InitSyndrome(t)

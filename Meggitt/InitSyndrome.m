@@ -4,8 +4,12 @@ function [syndrome] = InitSyndrome(r)
 %Returns the syndrome vector
 
     L = length(r(1,:));
-    syndrome = [0 0 0];
+    syndrome = zeros(1,8);
+    syndromeCopy = zeros(L, 8);
     for i = 1:L
        [~, syndrome] = Detector(r(1,L+1-i), syndrome); 
+       syndromeCopy(i,:) = syndrome;
     end
+    
+    syndromeCopy;
 end
