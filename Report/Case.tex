@@ -29,11 +29,11 @@ This case study concerns the implementation of a Meggitt decoder which has been 
 
 
 \subsection{Implementation of Encoder}
-The implemented encoder is a Matlab function, $cyclicEncoder$. The encoder is able to encode a message vector into systematic code by receiving a generator polynomial $g$ and a message vector $m$. In addition the encoder has been made generic so that it also is possible to state the code length $n$ and the message length $k$ - if nothing is stated, the default value of n is 15 and k is 7. The output of the function is a code vector. 
+The implemented encoder is a Matlab function, $cyclicEncoder$. The encoder is able to encode a message vector into systematic code by receiving a generator polynomial $g$ and a message vector $m$. In addition the encoder has been made generic so that it also is possible to state the code length $n$ and the message length $k$ - if nothing is stated, the default value of n is 15 and k is 7. The output of the function is a code vector, $c$. 
 
 \noindent Initially the function converts the message polynomial in vector form into a vector of the length n by shifting it $n-k$ to the right and thereby forming the polynomial $X^{n-k}m(X)$. 
 
-\noindent Secondly, the now right-shifted message polynomial is divided by the generator polynomial to find the remainder polynomial $p(X)$.
+\noindent Secondly, the now right-shifted message polynomial is divided by the generator polynomial to find the remainder polynomial, $p(X)$.
 
 \noindent Finally, adding the right-shifted message polynomial and the remainder polynomial results in the code polynomial.  
 
