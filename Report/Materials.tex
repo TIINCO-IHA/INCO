@@ -33,5 +33,54 @@ X^8
 
 
 \subsection*{Decoding}
+In general when decoding a received vector the syndrome vector (S) is needed to find out if any error have occurred.
+To find this the generator polynomial is used to make the generator matrix (G) which further is used to find the parity check matrix (H).
+The formula to find the syndrome vector for a received vector (r) is:
+\begin{equation}
+S = r \circ H^T = (s_{0},s_{1}, ..., s_{n-k-1})
+\end{equation}
+To do all this by hand will look like the example below.
+A generator polynomial could be $1+X+X^3$. 
+The generator polynomial for this will be $G_{k \times n}$ where k = 4 and n = 7:
+\begin{align*}
+G =
+\begin{bmatrix}
+1 & 1 & 0 & 1 & 0 & 0 & 0\\
+0 & 1 & 1 & 0 & 1 & 0 & 0\\
+0 & 0 & 1 & 1 & 0 & 1 & 0\\
+0 & 0 & 0 & 1 & 1 & 0 & 1\\
+\end{bmatrix} \\
+\end{align*}
+To find the parity check matrix, the generator matrix need to be in systematic form.
+This is done by creating a identity matrix at the end with detentions $(k \times k)$.
+In systematic form the generator matrix is:
+\begin{align*}
+G =
+\begin{bmatrix}
+1 & 1 & 0 & 1 & 0 & 0 & 0\\
+0 & 1 & 1 & 0 & 1 & 0 & 0\\
+1 & 1 & 1 & 0 & 0 & 1 & 0\\
+1 & 0 & 1 & 0 & 0 & 0 & 1\\
+\end{bmatrix} \\
+\end{align*}
+The first n - k columns is the parity matrix.
+The parity check matrix is in the form:
+\begin{equation}
+H = [I_{(n-k) \times (n-k)} \quad P^T_{(n-k) \times k}]
+\end{equation}
+\begin{align*}
+H =
+\begin{bmatrix}
+1 & 0 & 0 & 1 & 0 & 1 & 1\\
+0 & 1 & 0 & 1 & 1 & 1 & 0\\
+0 & 0 & 1 & 0 & 1 & 1 & 1\\
+\end{bmatrix} \\
+\end{align*}
+
+
+
+
+
+
 
 \end{document}
