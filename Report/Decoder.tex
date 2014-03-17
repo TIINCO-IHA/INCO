@@ -5,5 +5,44 @@
 \subsection{Meggitt decoder}
 
 The Meggitt decoder can decode an input message, $r(x)$, which may contain up to 2 errors and return the correct output vector, $v(x)$.\fxnote{Hvorfor hedder det en "vector", når vi vi skriver $r(x)$?}
+The Meggitt decoder can be called in Matlab with the function in \codeTitle \ref{lst:Meggitt}
+
+\begin{lstlisting}[caption=Meggit decoder function, style=Code-Matlab, label=lst:Meggitt]
+function res = Meggitt(r)
+
+	syndrome = InitSyndrome(r);
+	buffer = r;
+	L = length(r(1,:));
+	
+	error = zeros(1, L);
+	
+	for i = 1:L
+	   [error(1,i), syndrome] = Detector(0, syndrome); 
+	
+	   output = mod(buffer(1,L) + error(1,i),2);
+	
+	   buffer = circshift(buffer,[-1 1]);
+	   buffer(1,1) = output;   
+	end
+	
+	res = buffer;
+end
+\end{lstlisting}
+First the decoder will call analyze the input vector to return the syndrome value for input vector.
+Then it will store the input vector in a buffer and calculate the length of the vector.
+
+After initializing an empty error vector (same size as the input vector) it will for every symbol in the input vector do the following:
+\begin{itemize}
+
+\item Calculate the new syndrome and whether there's an error. Notice the first input is zero (explained in \fxnote{Insert reference}
+
+\item Calculate the bit value modulo 2 of the buffer and the calculated error.
+
+\item Shift all bits in the buffer and overwrite the 
+\end{itemize}
+
+
+
+
 
 \end{document}

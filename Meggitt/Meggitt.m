@@ -1,19 +1,36 @@
 function res = Meggitt(r)
+%Meggitt decoder
+%Decodes an input vector, r, for up to 2 errors
+%Returns a corrected output vector, if no more than 2 errors has oocured. 
 
-syndrome = InitSyndrome(r);
-buffer = r;
-L = length(r(1,:));
+    %Find syndrom for the input vector
+    syndrome = InitSyndrome(r);
 
-error = zeros(1, L);
+    %Store the input in a buffer
+    buffer = r;
 
-for i = 1:L
-   [error(1,i), syndrome] = Detector(0, syndrome); 
+    %Calculate the length of the input
+    L = length(r(1,:));
 
-   output = mod(buffer(1,L) + error(1,i),2);
+    %Allocate memory for an error vector
+    error = zeros(1, L);
 
-   buffer = circshift(buffer,[-1 1]);
-   buffer(1,1) = output;   
-end
+    %For every bit in the input vector
+    for i = 1:L
+        %Detect any errors from the syndrom and return if error and the next
+        %syndrome
+       [error(1,i), syndrome] = Detector(0, syndrome); 
 
-res = buffer;
+       %Modulo 2 of buffer and error value
+       output = mod(buffer(1,L) + error(1,i),2);
+
+       %Shift all bits 1 to the right
+       buffer = circshift(buffer,[-1 1]);
+
+       %Set last bit to the output
+       buffer(1,1) = output;   
+    end
+
+    %Return the buffer as output
+    res = buffer;
 end
