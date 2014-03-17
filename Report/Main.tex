@@ -1,12 +1,29 @@
 \documentclass[10pt, oneside]{article}
 
 \input{Preamble}
+
+%FixMe pakken viser små kommentarer, hvor der skal rettes
+%--------------------------------------------------
+%Brug med følgende: \fxnote{det her skal uddybes!} 
+%Se liste over alle fixMe's: \listoffixmes
+%Erstat 'draft' med 'final' for at fjerne alle kommentarer
+%--------------------------------------------------
+\usepackage[footnote,draft,english,silent,nomargin]{fixme}
+
+
 \title{TIINCO Mini Project 2014}
-\author{Rasmus Bækgaard (10893), Vinnie Juul Pedersen (201300143),\\ Janne Elisabeth Walsted (jw68266), and Maiken Bjerg Møller (201201706)}
-\date{\today}
+
+\author{Rasmus Bækgaard (10893), 
+Vinnie Juul Pedersen (201300143),\\ 
+Janne Elisabeth Walsted (jw68266), and 
+Maiken Bjerg Møller (201201706)}
+
+\date{March 20, 2014}
 
 \begin{document}
 \maketitle
+
+\listoffixmes
 
 \subfile{Abstract}
 \subfile{Materials}
@@ -14,5 +31,6 @@
 \subfile{Results}
 \subfile{Conclusion}
 \subfile{Encoder}
+\subfile{Decoder}
 
 \end{document}
