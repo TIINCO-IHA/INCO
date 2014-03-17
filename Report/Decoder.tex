@@ -34,15 +34,94 @@ Then it will store the input vector in a buffer and calculate the length of the 
 After initializing an empty error vector (same size as the input vector) it will for every symbol in the input vector do the following:
 \begin{itemize}
 
-\item Calculate the new syndrome and whether there's an error. Notice the first input is zero (explained in \fxnote{Insert reference}
+\item Calculate the new syndrome and whether there's an error (explained in \codeTitle \ref{lst:Detector}). Notice the first input is zero (explained in the next paragraph).
 
 \item Calculate the bit value modulo 2 of the buffer and the calculated error.
 
-\item Shift all bits in the buffer and overwrite the 
+\item Shift all bits in the buffer and overwrite the first bit in the buffer with the new value.
 \end{itemize}
+After this the buffer is returned as the result.
+\\
+\\
+The detector will return the syndrome vector for input vector and whether any errors has been detected.
+The function is shown in \codeTitle \ref{lst:Detector}.
+The input is a new bit from the input vector (0 if all bits have been listed) to be analyzed and the current syndrome vector.
+\\
+\\
+First the syndrome bits will be run through an AND-gate with the second parameter inverted.
+A '1' will indicate an error.
+\\
+Then the bits in the syndrome is shifted one place to the right and the the last bit is stored.
+The new value for this bit is calculated by adding the error, the last syndrome bit and the input vector bit in modulo 2.
+This value is stored as the new value for the last bit in the syndrome vector.
+\\
+Then the second syndrome vector bit is calculated with stored syndrome value and the current value in modulo 2.
+\\
+The new syndrome is then returned with error value.
+
+\begin{lstlisting}[caption=Detector function, style=Code-Matlab, label=lst:Detector]
+function [error, syndromeOut] = Detector(r, syndromeIn)
+%r = r(x) bit
+%syndromeIn
+
+    %Detect error
+    error = TriAnd(syndromeIn(1,1), syndromeIn(1,2), syndromeIn(1,3));
+
+    %Shift currentinput and syndrome 1 rot he right
+    syndrome = circshift(syndromeIn,[-1 1]);
+
+    %Save last syndrome
+    lastSyndrome = syndrome(1,1);
+
+    %Modulo 2 on error, last syndrome output and the input vector bit
+    newSyndromeValue = mod(error + lastSyndrome + r, 2); 
+    
+    %Replace first syndrome bit with the calculated syndrom value
+    syndrome(1,1) = newSyndromeValue;
+
+    %Modulo 2 on the last syndrom and the second for the new sydrome's 
+    %second bit
+    syndrome(1,2) = mod(syndrome(1,2) + lastSyndrome, 2);
+
+    %Returnt he calculated syndrome
+    syndromeOut = syndrome;
+end
+\end{lstlisting}
+When the Meggitt detector is called the syndrome vector will consist only of zeros and must be shifted in.
+By calling the $InitSyndrome(r)$ function (\codeTitle \ref{lst:InitSyndrome}) the syndrome can be found when all bits are shifted in.
+\\
+First the length of the input vector is found, and the syndrome is reset.
+For every bit, from right to left, the bits will be run through the $Detector$ function (\codeTitle \ref{lst:Detector}) to return the new syndrome.
+Notice the error value is ignored, since it is not useful for the initialing.
 
 
+\begin{lstlisting}[caption=InitSyndrome function, style=Code-Matlab, label=lst:InitSyndrome]
+function [syndrome] = InitSyndrome(r)
+%Initialize the syndrome vector
+%Input the vector, r
+%Returns the syndrome vector
 
+    L = length(r(1,:));
+    syndrome = [0 0 0];
+    for i = 1:L
+       [~, syndrome] = Detector(r(1,L+1-i), syndrome); 
+    end
+end
+\end{lstlisting}
+The $TriAnd$ function takes 3 parameters, inverts the second parameter and AND the values, as shown in \codeTitle \ref{lst:TriAnd}.
+
+\begin{lstlisting}[caption=TriAnd function, style=Code-Matlab, label=lst:TriAnd]
+function res = TriAnd(a, b, c)
+%And gate with second input inverted
+%Only input [1 0 1] will return 1
+
+    if( a == 1 && b == 0 && c == 1)
+        res = 1;
+    else
+        res = 0;
+    end
+end
+\end{lstlisting}
 
 
 \end{document}
