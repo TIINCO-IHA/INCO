@@ -62,7 +62,8 @@
 *.tks
 
 /Document/*.pdf
-/Report/**/*.pdf
+/**/Report/**/*.pdf
+[Bb]uild #Ignore all in build folder
 
 ####### Temporary folders ####### 
 [Bb]in
@@ -151,3 +152,8 @@ proguard/
 
 ########## MATLAB ##############
 *.asv
+
+
+
+########## Linux ##############
+.directory
