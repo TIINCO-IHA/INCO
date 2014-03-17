@@ -13,19 +13,19 @@ if nargin == 3
     for i = 1:L
         if isequal(errorVectors(i,:), syndromeIn) == 1
             errorVal = 1;
-            i
+            i;
         end
     end
 end
 
-%Shift currentinput and syndrome 1 rot he right
+%Shift current input and syndrome 1 to the right
 syndrome = circshift(syndromeIn,[-1 1]);
 
 %Save last syndrome
 lastSyndrome = syndrome(1,1);
 
 if nargin == 3 %If not init
-    %Modulo 2 on error, last syndrome output and the input vector bit
+    %Modulo 2 on error and last syndrome output
     newSyndromeValue = mod(errorVal + lastSyndrome, 2);
     
 elseif nargin == 2 %If init
@@ -40,7 +40,7 @@ syndrome(1,1) = newSyndromeValue;
 
 %Modulo 2 on the last syndrom and the second for the new sydrome's 
 %second bit    
-[~, loops] = size(syndrome(1,:));
+loops = length(syndrome(1,:));
 for i = 2:loops-1
     syndrome(1,i) = mod(syndrome(1,i) + lastSyndrome, 2);
 end

@@ -1,4 +1,5 @@
-function errorPattern = ErrorPattern(pol, rVector)
+function errorPattern = ErrorPattern(pol, rVector, n, k)
+
 
 L = length(rVector(1,:));
 flipped = zeros(length(rVector(1,:))-1, length(rVector(1,:)));
@@ -10,14 +11,15 @@ end
 flipped = [rVector ; flipped];
 
 
-syndrome = zeros(L,8);
+syndrome = zeros(L,n-k);
 for i = 1:L
     [q, p] = gfdeconv(flipped(i,:),pol,2);
-    while length(p(1,:)) ~= 8
-       p = [ p 0]; 
+    while length(p(1,:)) ~= n-k
+       p = [p 0]; 
     end
     syndrome(i,:) = p;
 end
 
 errorPattern = syndrome;
+%errorPattern
 end
