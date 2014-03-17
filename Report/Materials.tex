@@ -4,7 +4,7 @@
 \section*{Materials and Methods}
 
 (Teori om encoding og decoding)
-\subsection*{Encoding}
+\subsection{Encoding}
 %(Matematisk eksempel)
 
 \noindent Encoding for the code vector in systematic form:
@@ -18,7 +18,7 @@ c(X) = X^{n-k}m(X)+p(X)
 \end{equation}
 
 \noindent A concrete example with the generator polynomial $g(X)=1+X^4+X^6+X^7+X^8$ is used to encode the following message polynomial:
-$m(X)=1+X^2+X^4+X^6$. The code is a cyclic code, $C_{cyc}(15,7)$.
+$m(X)=1+X^2+X^4+X^6$, corresponding to $m=[1010101]$. The code is a cyclic code, $C_{cyc}(15,7)$.
 
 \noindent First the message is right shifted $n-k$ times.
 \begin{equation}
@@ -27,11 +27,40 @@ X^{15-7}m(X) = X^8+X^{10}+X^{12}+X^{14}
 
 \noindent Find $p(X)$ by taking the remainder from $X^{n-k}m(x)$ divided by $g(X)$.
 
-\begin{equation}
-X^8
-\end{equation}
 
+\[
+\renewcommand\arraystretch{1.2}
+\begin{array}{cccccccccccccccccc}
+& & & & & X^6 & + X^5 &  +X^4 & +X^2 & +1 & & & & & & & \\
+\cline{6-10}
+ X^8 & + X^7 & +X^6 & +X^4 & +1 \qquad \vline & X^{14} & +X^{12} & +X^{10} & + X^8 & & & & & & & & \\
+& & & & & X^{14} & + X^{13}& + X^{12} & +X^{10} & +X^6 & & & & & & & \\
+\cline{6-10}
+& & & & & & X^{13} & & +X^8 & +X^6 & & & & & & &\\
+&  &&    &&    &  X^{13} & +X^{12} & +X^{11} & +X^9 & +X^5 & \\
+\cline{7-11}
+& & &&  &&    &  X^{12} & +X^{11} & +X^9 & +X^8 & +X^6 & +X^5  \\
+& & &&  &&    &  X^{12} & +X^{11} & +X^{10} & +X^8 & & +X^4  \\
+\cline{8-13}
+&  &&    &    &   & &  & X^{10} & +X^9 & +X^6 & +X^5 & +X^4 \\
+&  &&    &    &   & &  & X^{10} & +X^9 & +X^8 & +X^6 & +X^2 \\
+\cline{9-13}
+&  &&    &    &   & & & & X^{8} & +X^5 & +X^4 & +X^2 \\
+&  &&    &    &   & & & & X^{8} & +X^7 & +X^6 & +X^4 & +1 \\
+\cline{10-14}
+&  &&  & & & & & p(X) = & & X^{7} & +X^6 & +X^5 & +X^2 & +1 \\
+\end{array}
+\]
 
-\subsection*{Decoding}
+\noindent Now $c(X)$ can be calculated:
+
+\begin{align}
+c(X) = X^8m(X)+p(X) = 1 + X^2 + X^5 + X^6 + X^7 + X^8 + X^{10}+ X^{12} + X^{14} \\
+c = [1 0 1 0 0 1 1 1 1 0 1 0 1 0 1]
+\end{align}
+
+\noindent It is easily seen that the encoded vector is in systematic form, hence the message vector corresponds to the last 7 bits.
+
+\subsection{Decoding}
 
 \end{document}
