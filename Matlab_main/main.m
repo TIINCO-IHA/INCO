@@ -17,9 +17,14 @@ c = cyclicEncoding(g,m,n,k);
 
 % Transmit code vector through an artificial communication channel, i.e.,
 % introduce errors to the code vector
-t = 1; % or t = 2
-% t = 2;
+% t = 1; % or t = 2
+t = 2;
+
 errorlocation = sort(randi(n,1,t));   % randi could generate the same two numbers, if t = 2. This must be avoided with some check
+while(t == 2 && (errorlocation(1)-errorlocation(2)) == 0)
+    errorlocation = sort(randi(n,1,t));
+    disp('Errorlocation was recalculated!');
+end
 r = c;
 % Flip bit at generated error location i the received vector.
 % Add 1 and modulo 2 for binary addition
