@@ -2,21 +2,37 @@
 
 \begin{document}
 \section{Materials and Methods}
-This section describes the theory for the encoding and Meggitt decoding of a cyclic code. Both encoding and decoding is explained with concrete examples which are also testable with the enclosed \textsc{Matlab} scripts. Knowledge is obtained through TI-INCO course lessons, the ``Essentials of Error-Control Coding'' text book by Jorge Casti\~{n}eira Moreira and Patrick Guy Farrell and through delivered material about decoding of ciclic codes.
 
+(Teori om encoding og decoding)
 \subsection{Encoding}
 %(Matematisk eksempel)
+\noindent When a code is in systematic form the message vector can be directly extracted from the encoded information. 
 
-\noindent Encoding for the code vector in systematic form:
-\begin{equation}
-X^{n-k}m(X) = q(X)g(X)+p(X)
-\end{equation}
+\noindent Encoding a message vector into a linear cyclic code, $C_{cyc}(n,k)$, in systematic form can be achieved as follows:
 
-\noindent By adding the redundancy polynomial to the shifted message polynomial, the encoded vector in systematic form is obtained.
+\noindent First the message polynomial (in the form of $m(X) = m_{0} + m_{1}X+...+m_{k-1}X^{k-1}$) should be converted into a vector of the length $n$. This is attained by multiplying the message vector by $X^{n-k}$, which results in a shift of the message $n-k$ to the right and forms the right-shifted message polynomial $X^{n-k}m(X)$.
+
+\noindent Secondly, the right-shifted message polynomial should be divided by a generator polynomial, $g(X)$, fitting the conditions for being a generator polynomial of a linear cyclic code. The result of this division is a remainder polynomial (redundancy polynomial).
+
+\noindent Finally, the code polynomial in systematic form can be obtained by adding the right-shifted message polynomial and the remainder polynomial: 
+
 \begin{equation}
 c(X) = X^{n-k}m(X)+p(X)
 \end{equation}
 
+\noindent The following equations describe the relationships between the right-shifted message polynomial, $X^{n-k}m(X)$, the factor, $q(X)$, the generator polynomial, $g(X)$, and the remainder polynomial, $p(X)$.  
+
+\begin{equation}
+X^{n-k}m(X) = q(X)g(X)+p(X)
+\end{equation}
+
+$\leftrightarrow$
+
+\begin{equation}
+X^{n-k}m(X)+p(X) = q(X)g(X)
+\end{equation}
+
+\subsubsection{Encoding Example}
 \noindent A concrete example with the generator polynomial $g(X)=1+X^4+X^6+X^7+X^8$ is used to encode the following message polynomial:
 $m(X)=1+X^2+X^4+X^6$, corresponding to $m=[1010101]$. The code is a cyclic code, $C_{cyc}(15,7)$.
 
@@ -62,5 +78,48 @@ c = [1 0 1 0 0 1 1 1 1 0 1 0 1 0 1]
 \noindent It is easily seen that the encoded vector is in systematic form, hence the message vector corresponds to the last 7 bits.
 
 \subsection{Decoding}
+In general when decoding a received vector the syndrome vector (S) is needed to find out if any error have occurred.
+To find this the generator polynomial is used to make the generator matrix (G) which further is used to find the parity check matrix (H).
+The formula to find the syndrome vector for a received vector (r) is:
+\begin{equation}
+S = r \circ H^T = (s_{0},s_{1}, ..., s_{n-k-1})
+\end{equation}
+To do all this by hand will look like the example below.
+A generator polynomial could be $1+X+X^3$. 
+The generator polynomial for this will be $G_{k \times n}$ where k = 4 and n = 7:
+\begin{align*}
+G =
+\begin{bmatrix}
+1 & 1 & 0 & 1 & 0 & 0 & 0\\
+0 & 1 & 1 & 0 & 1 & 0 & 0\\
+0 & 0 & 1 & 1 & 0 & 1 & 0\\
+0 & 0 & 0 & 1 & 1 & 0 & 1\\
+\end{bmatrix} \\
+\end{align*}
+To find the parity check matrix, the generator matrix need to be in systematic form.
+This is done by creating a identity matrix at the end with detentions $(k \times k)$.
+In systematic form the generator matrix is:
+\begin{align*}
+G =
+\begin{bmatrix}
+1 & 1 & 0 & 1 & 0 & 0 & 0\\
+0 & 1 & 1 & 0 & 1 & 0 & 0\\
+1 & 1 & 1 & 0 & 0 & 1 & 0\\
+1 & 0 & 1 & 0 & 0 & 0 & 1\\
+\end{bmatrix} \\
+\end{align*}
+The first n - k columns is the parity matrix.
+The parity check matrix is in the form:
+\begin{equation}
+H = [I_{(n-k) \times (n-k)} \quad P^T_{(n-k) \times k}]
+\end{equation}
+\begin{align*}
+H =
+\begin{bmatrix}
+1 & 0 & 0 & 1 & 0 & 1 & 1\\
+0 & 1 & 0 & 1 & 1 & 1 & 0\\
+0 & 0 & 1 & 0 & 1 & 1 & 1\\
+\end{bmatrix} \\
+\end{align*}
 
 \end{document}
