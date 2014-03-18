@@ -1,19 +1,18 @@
-function [errorVal, syndromeOut] = Detector(r, syndromeIn, errorVectors)
+function [errorNumber, syndromeOut] = Detector(r, syndromeIn, errorVectors)
 %Will detect up to 2 errors from the errorVectors and the syndromeIn
 %r = r(x) bit, only used when initialing has been done
 %syndromeIn = the current syndrome.
 %errorVectors = Matrix with errorVectors
 
-errorVal = 0;
+errorNumber = 0;
 
-%If errorVectors are provided it's NOT the initial state.
+%If errorVectors are provided and it's NOT the initial state.
 if nargin == 3
-     L = length(errorVectors(:,1));
+     L = size(errorVectors,1);
 %     errorPatterns = zeros(L, length(errorVectors(1,:)));
     for i = 1:L
         if isequal(errorVectors(i,:), syndromeIn) == 1
-            errorVal = 1;
-            i;
+            errorNumber = i
         end
     end
 end
@@ -26,7 +25,7 @@ lastSyndrome = syndrome(1,1);
 
 if nargin == 3 %If not init
     %Modulo 2 on error and last syndrome output
-    newSyndromeValue = mod(errorVal + lastSyndrome, 2);
+    newSyndromeValue = mod(errorNumber + lastSyndrome, 2);
     
 elseif nargin == 2 %If init
     newSyndromeValue = mod(lastSyndrome + r, 2); 

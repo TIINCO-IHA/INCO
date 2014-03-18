@@ -3,31 +3,32 @@ function [errorVec, codeVec, tag]  = Meggitt(r, pol, n, k)
 %Decodes an input vector, r, for up to 2 errors
 %Returns a corrected output vector, if no more than 2 errors has oocured. 
 
-errorVectors = ErrorPattern(pol, r, n, k);
-if n == 15
-    s = [0 1 1 1 0 1 1 0 0 1 0 1 0 0 1];
-    errorVectors = ErrorPattern(pol, s, n, k);
-end
+[errorVectors, syndromeTable] = ErrorPattern(r, pol);
+% if n == 15
+%     s = [0 1 1 1 0 1 1 0 0 1 0 1 0 0 1];
+%     errorVectors = ErrorPattern(pol, s, n, k);
+% end
 
 %Find syndrom for the input vector
-syndrome = InitSyndrome(r, n-k);
+[syndrome, ~] = InitSyndrome(r, n-k);
+
+InitialSyndrome = syndrome
 
 %Store the input in a buffer
 buffer = r;
-
-%Calculate the length of the input
-L = length(r(1,:));
+L = size(r,2);
 
 %Allocate memory for an error vector
 error = zeros(1, L);
 
 %For every bit in the input vector
+allSyndromes = zeros(L, n-k);
 for i = 1:L
     %Detect any errors from the syndrom and return if error and the next
     %syndrome
-   [error(1,i), syndrome] = Detector(0, syndrome, errorVectors); 
+   [error(1,i), syndrome] = Detector(0, syndrome, syndromeTable); 
 
-   %syndrome
+   allSyndromes(i,:) = syndrome;
    %error
    %Modulo 2 of buffer and error value
    output = mod(buffer(1,L) + error(1,i),2);
@@ -38,6 +39,8 @@ for i = 1:L
    %Set last bit to the output
    buffer(1,1) = output;   
 end
+allSyndromes
+syndromeTable
 error
 %Return the buffer as output
 codeVec = buffer;

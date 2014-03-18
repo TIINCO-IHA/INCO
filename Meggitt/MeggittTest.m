@@ -19,6 +19,6 @@ k = 7;
 c = [0 1 1 1 0 1 1 0 0 1 0 1 0 0 0];
 r = [0 1 1 1 0 1 1 0 0 1 0 1 0 0 1];
 % 
-% [errVec, codeVec, tag] = Meggitt(r, pol, n, k);
-% Equal = isequal(c, codeVec)
+[errVec, codeVec, tag] = Meggitt(r, pol, n, k);
+Equal = isequal(c, codeVec)
 %syndrome = InitSyndrome(t)

@@ -1,4 +1,4 @@
-function [syndrome] = InitSyndrome(r, m)
+function [syndrome, allSyndromes] = InitSyndrome(r, m)
 %Initialize the syndrome vector
 %Input the vector, r
 %Returns the syndrome vector
@@ -11,5 +11,5 @@ function [syndrome] = InitSyndrome(r, m)
        syndromeCopy(i,:) = syndrome;
     end
     
-    syndromeCopy
+    allSyndromes = syndromeCopy;
 end
