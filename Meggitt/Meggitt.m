@@ -29,7 +29,7 @@ for i = 1:L
    [error(1,i), syndrome] = Detector(0, syndrome, syndromeTable); 
 
    allSyndromes(i,:) = syndrome;
-   %error
+   
    %Modulo 2 of buffer and error value
    output = mod(buffer(1,L) + error(1,i),2);
 

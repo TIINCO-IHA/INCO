@@ -12,7 +12,7 @@ if nargin == 3
 %     errorPatterns = zeros(L, length(errorVectors(1,:)));
     for i = 1:L
         if isequal(errorVectors(i,:), syndromeIn) == 1
-            errorNumber = i
+            errorNumber = i;
         end
     end
 end
