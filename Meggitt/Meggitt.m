@@ -3,16 +3,20 @@ function [errorVec, codeVec, tag]  = Meggitt(r, pol, n, k)
 %Decodes an input vector, r, for up to 2 errors
 %Returns a corrected output vector, if no more than 2 errors has oocured. 
 
-[errorVectors, syndromeTable] = ErrorPattern(r, pol);
+% Den er ikke nødvendig længere, fordi den er genereret en gang for alle.
+% Den ligger i syn.mat
+% [errorVectors, syndromeTable] = ErrorPattern(r, pol);
 % if n == 15
 %     s = [0 1 1 1 0 1 1 0 0 1 0 1 0 0 1];
 %     errorVectors = ErrorPattern(pol, s, n, k);
 % end
 
+
+
 %Find syndrom for the input vector
 [syndrome, ~] = InitSyndrome(r, n-k);
 
-InitialSyndrome = syndrome
+InitialSyndrome = syndrome;
 
 %Store the input in a buffer
 buffer = r;
@@ -39,9 +43,9 @@ for i = 1:L
    %Set last bit to the output
    buffer(1,1) = output;   
 end
-allSyndromes
-syndromeTable
-error
+% allSyndromes
+% syndromeTable
+% error
 %Return the buffer as output
 codeVec = buffer;
 errorVec = r;
