@@ -3,7 +3,6 @@
 \begin{document}
 \section{Materials and Methods}
 This section describes the theory for the encoding and Meggitt decoding of a cyclic code. Both encoding and decoding is explained with concrete examples which are also testable with the enclosed \textsc{Matlab} scripts. Knowledge is obtained through TI-INCO course lessons, the ``Essentials of Error-Control Coding'' text book by Jorge Casti\~{n}eira Moreira and Patrick Guy Farrell and through delivered material about decoding of cyclic codes (chapter 5.5).
->>>>>>> c238e86f937f7651ae29ca92bbc7717107d750f3
 
 (Teori om encoding og decoding)
 \subsection{Encoding}
@@ -82,46 +81,52 @@ c = [1 0 1 0 0 1 1 1 1 0 1 0 1 0 1]
 \noindent It is easily seen that the encoded vector is in systematic form, hence the message vector corresponds to the last 7 bits.
 
 \subsection{Decoding}
-In general when decoding a received vector r(X) the syndrome vector S(X) is needed to find out if any errors have occurred.
-To find this the generator polynomial is used g(X).
+In general when decoding a received vector, $ r(X) $, the syndrome vector, $ S(X) $, is needed to find out if any errors have happen.
+To find this the generator polynomial, $ g(X) $, is used.
 The formula to find the syndrome vector for a received vector is:
 \begin{equation}
 S(X) = r(X) \; mod \; g(X)
 \label{syndrom formular}
 \end{equation}
-Where the division is done in this way. 
+Where $ S(X) $ is the remainder from the division is done in this way. 
 \[
 \renewcommand\arraystretch{1.2}
 \begin{array}{cccccccccccccccccc}
 \cline{2-2}
- S(X) = \qquad g(X) \qquad \vline & r(X) \\
+ S(X) = \quad g(X) \quad \vline & r(X) \\
 \end{array}
 \]
 If the syndrome vector is an all zero vector there is no error detected in the received vector.
-If the syndrome vector is not a all zero vector it can tell where one or more errors are placed.
+If the syndrome vector is not an all zero vector it can tell where one or more errors are placed.
 Every possible error is mapped to a specific syndrome.
+The error capability and the error detection can be found in this way:
+\begin{eqnarray}
+error detection = d_{min}-1\\
+error correction = t = \frac{d_{min}-1}{2}
+\end{eqnarray}
 When the error is found it can be corrected.
 It is known that
 \begin{equation}
 \label{eq:received_vectore_long_gen}
-r(X) = q(X) \cdot g(x) + S(X)
+r(X) = q(X) \cdot g(x) \oplus S(X)
 \end{equation}
-where q(X) is the quotient.
-When encoding c(X) and combining equation \ref{eq:code polynomail formular} and \ref{eq:encoding} it can be seen that $q(X) \cdot g(X) = c(X)$.
-It is also known that S(X) is the error therefore $S(X) = e(X)$.
-With this knowledge equation \ref{eq:received_vectore_long_gen} can be change to:
+where $q(X)$ is the quotient.
+When encoding $c(X)$ and combining equation \ref{eq:code polynomail formular} and \ref{eq:encoding} it is seen that $q(X) \cdot g(X) = c(X)$.
+It is also known that $ S(X) $ is the error therefore $S(X) = e(X)$.
+With this knowledge equation \ref{eq:received_vectore_long_gen} can be changed to:
 \begin{equation}
-r(X) = c(X) + e(X)
+r(X) = c(X) \oplus e(X)
 \end{equation}
-In the decoding process r(X) is know and e(X) is calculated, and c(X) is the wanted result.
-Therefore c(X) can be isolated:
+In the decoding process $ r(X) $ is known and $ e(X) $ is calculated, and $ c(X) $ is the desired result.
+Therefore $ c(X) $ can be isolated:
 \begin{equation}
-c(X) = r(X) + e(X)
+c(X) = r(X) \oplus e(X)
 \end{equation}
-This means that when the error has been located it can be removed by multiplying it to r(X).
+This means that when the error has been located it can be removed by multiplying it to $ r(X) $.
 
 \subsubsection{Meggitt decoding} 
-The Meggitt decoder is used to decode any cyclic code. The error patterns can be specified by a decoding table which is made as a lookup table.
+The Meggitt decoder is used to decode any cyclic code.
+The error patterns can be specified by a decoding table which is made as a lookup table.
 However this procedure is complex and the decoding circuit tends to grow exponentially with the code length and the number of errors which can be corrected.
 The Meggitt decoders are useful to correct up to 3 random errors.
 The Meggitt decoder are shown on Figure \ref{fig:Meggitt_decoder}. It consist of 3 main component:
@@ -171,9 +176,9 @@ Step 2 and 3 is repeated.
 \end{enumerate}
 
 \subsubsection{Meggitt decode example}
-In this example the codeword c = [0 1 1 1 1 0 0 0 1 0 0 1 1 0 1] is used.
+In this example the codeword $ c = [0 1 1 1 1 0 0 0 1 0 0 1 1 0 1] $ is used.
 An error is made on bit 7 which mean $X^6$ is flipped.
-The received vector is: r = [0 1 1 1 1 0 {\color{red}1} 0 1 0 0 1 1 0 1].
+The received vector is: $ r = [0 1 1 1 1 0 {\color{red}1} 0 1 0 0 1 1 0 1] $.
 At first r(X) is shifted into the syndrome register.
 The first 8 step is straight forward because where will be no feedback at the syndrome register is initialized with all zeroes at the beginning.
 \begin{eqnarray*}
@@ -199,12 +204,12 @@ shift_{13}: \quad input = 1 \quad 001{\color{cyan}0}1{\color{cyan}00}1 \quad \Ri
 shift_{14}: \quad input = 1 \quad 000{\color{cyan}1}1{\color{cyan}11}1 \quad \Rightarrow \quad 00000100\\
 shift_{15}: \quad input = 0 \quad 000{\color{cyan}0}0{\color{cyan}10}0 \quad \Rightarrow \quad 00000010
 \end{eqnarray*}
-After shifted r(X) into the syndrome register the syndrome has a 1 on the 7'th bit, which is the syndrome pattern matching the error pattern for $X^6$.
+After shifted$  r(X) $ into the syndrome register the syndrome has a 1 on the 7'th bit, which is the syndrome pattern matching the error pattern for $X^6$.
 This bit was flipped in the received vector to introduce an error.
-An other way to find the syndrome matching r(X) is to make the polynomial division as in Equation \ref{syndrom formular}.
+An other way to find the syndrome matching $ r(X) $ is to make the polynomial division as in Equation \ref{syndrom formular}.
 
 It will know be shown what happens in the syndrome register when shifting and correcting the error.
-As r(X) is not used any more, the input is set to the error output which is zero when no error is detected in the last bit.
+As $ r(X) $ is not used any more, the input is set to the error output which is zero when no error is detected in the last bit.
 \begin{eqnarray*}
 \textbf{shift no. \quad	input \quad old syn \qquad \quad new syn}\\
 shift_1: \quad input = 0 \quad 00000010 \quad \Rightarrow \quad 00000001\\
