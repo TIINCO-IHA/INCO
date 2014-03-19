@@ -17,11 +17,7 @@ if(nargin < 1)  % no input parameters
     t = 2;
     errorlocation = sort(randi(n,1,t));
 elseif(nargin > 0)
-    if(t_errors > 2)
-        t = 2;
-    else
-        t = t_errors;
-    end
+    t = t_errors;
     if(nargin < 2)
         errorlocation = sort(randi(n,1,t));
     else
@@ -35,7 +31,7 @@ m = mod(randi(2,1,k),2);
 % Encode message vector by the ciclic code encoder
 c = cyclicEncoding(g,m,n,k);
 
-while(t == 2 && (errorlocation(1)-errorlocation(2)) == 0)
+while(t > 2 && length(unique(errorlocation)) ~= t)
     errorlocation = sort(randi(n,1,t));
     disp('Errorlocation was recalculated!');
 end
@@ -47,7 +43,15 @@ r(errorlocation) = mod(c(errorlocation)+1,2);
 
 % Decode the received vector by the meggitt decoder
 
-res = Meggitt(r);
+[e, r_c, tag] = meggitt_decoder(r, g, n, k);
+
+c_t = mat2str(c);
+e_t = mat2str(e);
+r_t = mat2str(r);
+rc_t = mat2str(r_c);
+t_out = 'The coded vector is    c = %s.\nAfter transmission is  r = %s.\nThe error vector is    e = %s.\nThe corrected vector r_c = %s\nThe tag from the decoder claims: %s.\n';
+fprintf(t_out,c_t,r_t,e_t,rc_t,tag);
+% clear c_t; clear e_t; clear r_t; clear rc_t; clear t_out;
 
 save variables
-test = isequal(c, res);
+test = isequal(c, r_c);

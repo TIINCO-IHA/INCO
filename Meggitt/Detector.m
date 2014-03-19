@@ -21,7 +21,7 @@ end
 syndrome = circshift(syndromeIn,[-1 1]);
 
 %Save last syndrome
-lastSyndrome = syndrome(1,1);
+lastSyndrome = syndrome(1,1)
 
 if nargin == 3 %If not init
     %Modulo 2 on error and last syndrome output
