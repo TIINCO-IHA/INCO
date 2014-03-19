@@ -2,8 +2,6 @@
 
 \begin{document}
 \section{Materials and Methods}
-<<<<<<< HEAD
-=======
 This section describes the theory for the encoding and Meggitt decoding of a cyclic code. Both encoding and decoding is explained with concrete examples which are also testable with the enclosed \textsc{Matlab} scripts. Knowledge is obtained through TI-INCO course lessons, the ``Essentials of Error-Control Coding'' text book by Jorge Casti\~{n}eira Moreira and Patrick Guy Farrell and through delivered material about decoding of cyclic codes (chapter 5.5).
 >>>>>>> c238e86f937f7651ae29ca92bbc7717107d750f3
 
@@ -22,6 +20,7 @@ This section describes the theory for the encoding and Meggitt decoding of a cyc
 
 \begin{equation}
 c(X) = X^{n-k}m(X)+p(X)
+\label{eq:code polynomail formular}
 \end{equation}
 
 \noindent The following equations describe the relationships between the right-shifted message polynomial, $X^{n-k}m(X)$, the factor, $q(X)$, the generator polynomial, $g(X)$, and the remainder polynomial, $p(X)$.  
@@ -34,6 +33,7 @@ $\leftrightarrow$
 
 \begin{equation}
 X^{n-k}m(X)+p(X) = q(X)g(X)
+\label{eq:encoding}
 \end{equation}
 
 \subsubsection{Encoding Example}
@@ -82,48 +82,151 @@ c = [1 0 1 0 0 1 1 1 1 0 1 0 1 0 1]
 \noindent It is easily seen that the encoded vector is in systematic form, hence the message vector corresponds to the last 7 bits.
 
 \subsection{Decoding}
-In general when decoding a received vector the syndrome vector (S) is needed to find out if any error have occurred.
-To find this the generator polynomial is used to make the generator matrix (G) which further is used to find the parity check matrix (H).
-The formula to find the syndrome vector for a received vector (r) is:
+In general when decoding a received vector r(X) the syndrome vector S(X) is needed to find out if any errors have occurred.
+To find this the generator polynomial is used g(X).
+The formula to find the syndrome vector for a received vector is:
 \begin{equation}
-S = r \circ H^T = (s_{0},s_{1}, ..., s_{n-k-1})
+S(X) = r(X) \; mod \; g(X)
+\label{syndrom formular}
 \end{equation}
-To do all this by hand will look like the example below.
-A generator polynomial could be $1+X+X^3$. 
-The generator polynomial for this will be $G_{k \times n}$ where k = 4 and n = 7:
-\begin{align*}
-G =
-\begin{bmatrix}
-1 & 1 & 0 & 1 & 0 & 0 & 0\\
-0 & 1 & 1 & 0 & 1 & 0 & 0\\
-0 & 0 & 1 & 1 & 0 & 1 & 0\\
-0 & 0 & 0 & 1 & 1 & 0 & 1\\
-\end{bmatrix} \\
-\end{align*}
-To find the parity check matrix, the generator matrix need to be in systematic form.
-This is done by creating a identity matrix at the end with detentions $(k \times k)$.
-In systematic form the generator matrix is:
-\begin{align*}
-G =
-\begin{bmatrix}
-1 & 1 & 0 & 1 & 0 & 0 & 0\\
-0 & 1 & 1 & 0 & 1 & 0 & 0\\
-1 & 1 & 1 & 0 & 0 & 1 & 0\\
-1 & 0 & 1 & 0 & 0 & 0 & 1\\
-\end{bmatrix} \\
-\end{align*}
-The first n - k columns is the parity matrix.
-The parity check matrix is in the form:
+Where the division is done in this way. 
+\[
+\renewcommand\arraystretch{1.2}
+\begin{array}{cccccccccccccccccc}
+\cline{2-2}
+ S(X) = \qquad g(X) \qquad \vline & r(X) \\
+\end{array}
+\]
+If the syndrome vector is an all zero vector there is no error detected in the received vector.
+If the syndrome vector is not a all zero vector it can tell where one or more errors are placed.
+Every possible error is mapped to a specific syndrome.
+When the error is found it can be corrected.
+It is known that
 \begin{equation}
-H = [I_{(n-k) \times (n-k)} \quad P^T_{(n-k) \times k}]
+\label{eq:received_vectore_long_gen}
+r(X) = q(X) \cdot g(x) + S(X)
 \end{equation}
-\begin{align*}
-H =
-\begin{bmatrix}
-1 & 0 & 0 & 1 & 0 & 1 & 1\\
-0 & 1 & 0 & 1 & 1 & 1 & 0\\
-0 & 0 & 1 & 0 & 1 & 1 & 1\\
-\end{bmatrix} \\
-\end{align*}
+where q(X) is the quotient.
+When encoding c(X) and combining equation \ref{eq:code polynomail formular} and \ref{eq:encoding} it can be seen that $q(X) \cdot g(X) = c(X)$.
+It is also known that S(X) is the error therefore $S(X) = e(X)$.
+With this knowledge equation \ref{eq:received_vectore_long_gen} can be change to:
+\begin{equation}
+r(X) = c(X) + e(X)
+\end{equation}
+In the decoding process r(X) is know and e(X) is calculated, and c(X) is the wanted result.
+Therefore c(X) can be isolated:
+\begin{equation}
+c(X) = r(X) + e(X)
+\end{equation}
+This means that when the error has been located it can be removed by multiplying it to r(X).
+
+\subsubsection{Meggitt decoding} 
+The Meggitt decoder is used to decode any cyclic code. The error patterns can be specified by a decoding table which is made as a lookup table.
+However this procedure is complex and the decoding circuit tends to grow exponentially with the code length and the number of errors which can be corrected.
+The Meggitt decoders are useful to correct up to 3 random errors.
+The Meggitt decoder are shown on Figure \ref{fig:Meggitt_decoder}. It consist of 3 main component:
+\begin{itemize}
+\item Buffer register
+\subitem Is buffering the received vector
+\item Syndrome register
+\subitem Containing the specific syndrome for the buffer
+\item Error pattern detection circuit
+\subitem Containing the lookup table with all the error patterns
+\end{itemize}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.7\linewidth]{./Picture/Meggitt_decoder}
+\caption[The Meggitt decoder]{Meggitt decoder overview}
+\label{fig:Meggitt_decoder}
+\end{figure}
+Figure \ref{fig:Meggitt_decoder_example} shows a more in details how the syndrome register could be build together with the error pattern detection circuit.
+The feedback in the syndrome register is depending on the general polynomial.
+The number of bits in the syndrome is equal to the highest degree in g(X).
+The non zero places in the general vector will get the feedback.
+In this example the generator polynomial is $1+X+X^3$.
+Therefore there will be feedback before 1 and X and the feedback is given by $X^3$.
+The generator polynomial used in this project is: $g(X)=1+X^4+X^6+X^7+X^8$.
+The feedback in the syndrome register will therefore happen before memory block 1, 5, 7 and 8. \textbf{See Figure XX <------}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.7\linewidth]{./Picture/Meggitt_decoder_example}
+\caption[Meggit Decoder example]{Meggitt decoder details}
+\label{fig:Meggitt_decoder_example}
+\end{figure}
+The Meggitt decoder contains of 5 steps:
+\begin{enumerate}
+\item The received vector is shifted into the buffer register and syndrome register.
+At this point the feedback from the error pattern circuit is not used.
+\item The syndrome is check in the error pattern detection circuit.
+If the syndrome is in the error pattern lookup table there is an error in the last bit in the buffer register and the error pattern detection circuit output will be 1.
+If the syndrome don't match any error pattern it output will be 0.
+\item The rightmost symbol in the buffer register is read out at the same time as the syndrome register is shifted once.
+If an error has been detected it is feedback to he shifted syndrome register which modify the syndrome.
+The error is also multiplied to the symbol which has been read out of the buffer. 
+\item The new syndrome is match the new rightmost symbol in the buffer.
+Step 2 and 3 is repeated.
+\item The received vector is decoded symbol by symbol until the whole receive vector has been read out of the buffer register.
+\end{enumerate}
+
+\subsubsection{Meggitt decode example}
+In this example the codeword c = [0 1 1 1 1 0 0 0 1 0 0 1 1 0 1] is used.
+An error is made on bit 7 which mean $X^6$ is flipped.
+The received vector is: r = [0 1 1 1 1 0 {\color{red}1} 0 1 0 0 1 1 0 1].
+At first r(X) is shifted into the syndrome register.
+The first 8 step is straight forward because where will be no feedback at the syndrome register is initialized with all zeroes at the beginning.
+\begin{eqnarray*}
+\textbf{shift no. \quad	input \qquad syndrome}\\
+shift_1: \quad input = 1 \quad \Rightarrow \quad 10000000\\
+shift_2: \quad input = 0 \quad \Rightarrow \quad 01000000\\
+shift_3: \quad input = 1 \quad \Rightarrow \quad 10100000\\
+shift_4: \quad input = 1 \quad \Rightarrow \quad 11010000\\
+shift_5: \quad input = 0 \quad \Rightarrow \quad 01101000\\
+shift_6: \quad input = 0 \quad \Rightarrow \quad 00110100\\
+shift_7: \quad input = 1 \quad \Rightarrow \quad 10011010\\
+shift_8: \quad input = 0 \quad \Rightarrow \quad 01001101
+\end{eqnarray*}
+The next 7 shift is it possible to get feedback.
+The bit coloured light blue is the one which receive feedback. 
+\begin{eqnarray*}
+\textbf{shift no. \quad	input \quad old syn \qquad \quad new syn}\\
+shift_9: \quad input = 1 \quad 010{\color{cyan}1}0{\color{cyan}11}01 \quad \Rightarrow \quad 00101101\\
+shift_{10}: \quad input = 0 \quad 001{\color{cyan}0}1{\color{cyan}10}1 \quad \Rightarrow \quad 10011101\\
+shift_{11}: \quad input = 1 \quad 100{\color{cyan}1}1{\color{cyan}10}1 \quad \Rightarrow \quad 01000101\\
+shift_{12}: \quad input = 1 \quad 010{\color{cyan}0}0{\color{cyan}10}1 \quad \Rightarrow \quad 00101001\\
+shift_{13}: \quad input = 1 \quad 001{\color{cyan}0}1{\color{cyan}00}1 \quad \Rightarrow \quad 00011111\\
+shift_{14}: \quad input = 1 \quad 000{\color{cyan}1}1{\color{cyan}11}1 \quad \Rightarrow \quad 00000100\\
+shift_{15}: \quad input = 0 \quad 000{\color{cyan}0}0{\color{cyan}10}0 \quad \Rightarrow \quad 00000010
+\end{eqnarray*}
+After shifted r(X) into the syndrome register the syndrome has a 1 on the 7'th bit, which is the syndrome pattern matching the error pattern for $X^6$.
+This bit was flipped in the received vector to introduce an error.
+An other way to find the syndrome matching r(X) is to make the polynomial division as in Equation \ref{syndrom formular}.
+
+It will know be shown what happens in the syndrome register when shifting and correcting the error.
+As r(X) is not used any more, the input is set to the error output which is zero when no error is detected in the last bit.
+\begin{eqnarray*}
+\textbf{shift no. \quad	input \quad old syn \qquad \quad new syn}\\
+shift_1: \quad input = 0 \quad 00000010 \quad \Rightarrow \quad 00000001\\
+shift_2: \quad input = 0 \quad 00000001 \quad \Rightarrow \quad 10001011\\
+shift_3: \quad input = 0 \quad 10001011 \quad \Rightarrow \quad 11001110\\
+shift_3: \quad input = 0 \quad 11001110 \quad \Rightarrow \quad 01100111\\
+shift_4: \quad input = 0 \quad 01100111 \quad \Rightarrow \quad 10111000\\
+shift_5: \quad input = 0 \quad 10111000 \quad \Rightarrow \quad 01011100\\
+shift_6: \quad input = 0 \quad 01011100 \quad \Rightarrow \quad 00101110\\
+shift_7: \quad input = 0 \quad 00101110 \quad \Rightarrow \quad 00010111\\
+shift_8: \quad input = 1 \quad 00010111 \quad \Rightarrow \quad 00000000\\
+\end{eqnarray*}
+In shift 7 the syndrome matching the error pattern for one error at the last bit occur.
+After the 8'th bit the syndrome becomes a all zero vector, which indicates that there is no more errors in the buffer.
+ 
+
+
+
+
+
+
+
+
 
 \end{document}
