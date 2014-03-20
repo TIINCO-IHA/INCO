@@ -1,30 +1,39 @@
 \documentclass[Main]{subfiles}
 
 \begin{document}
-\section{Materials and Methods}
+\section{Methods and Materials}
+Information theory concerns analyzation of the communication between a transmitter and a receiver through an unreliable channel. This analyzation consists of analyzing the information sources as well as analyzing the relationship between the information and the unreliable transmission channel. 
+
+Coding is an information theory technique used for optimizing the transmission and making the most efficient use of the channel. By using coding it is possible to have an error-free transmission through a noisy or unreliable channel as long as the transmission rate does not exceed the channel capacity. (Channel capacity is the maximum transmission rate over the given channel for reliable transmission). This was predicted by Shannon in his coding (channel capacity) theorem, which states that: 
+
+ \begin{quotation} \noindent If the information rate of a given source does not exceed the capacity of a given channel, then there exists a coding technique that makes possible transmission through this unreliable channel with an arbitrarily low error rate. \end{quotation}
+ 
+The coding technique used for achieving error-free transmission is error-correction coding. It is executed by the transmitter systematicly adding redundancy to the message (encoding) before transmission. This redundancy is used by the receiver to recover the message information after transmission (decoding). 
+
 This section describes the theory for the encoding and Meggitt decoding of a cyclic code. 
 Both encoding and decoding is explained with concrete examples which are also testable with the enclosed \textsc{Matlab} scripts. 
-Knowledge is obtained through TI-INCO course lessons, the ``Essentials of Error-Control Coding'' text book by Jorge Casti\~{n}eira Moreira and Patrick Guy Farrell and through delivered material about decoding of cyclic codes (chapter 5.5).\fxnote{Make reference}
+Knowledge is obtained through TI-INCO course lessons, the ``Essentials of Error-Control Coding'' text book by Jorge Casti\~{n}eira Moreira and Patrick Guy Farrell and through delivered material about decoding of cyclic codes (Chapter 5.5 from the "Error Control Coding" text book by Shu Lin and Daniel J. Costello). 
 
 \subsection{Encoding}
-%(Matematisk eksempel)
-\noindent When a code is in systematic form the message vector can be directly extracted from the encoded information. 
+Error-control coding is a technique that adds redundancy to the messages. The encoder takes the message, that is a block of $k$ binary digits (bits), and generates a codeword of $n$ bits ($n > k$), i.e. $n - k$ redundancy/parity check bits are added. The assignment of the codeword is a bijective function that adds the redundancy and allows us the decoding of each message. 
 
-\noindent Encoding a message vector into a linear cyclic code, $C_{cyc}(n,k)$, in systematic form can be achieved as follows:
+When the codeword is in systematic form the codeword consists of the ($n - k$) parity check bits followed by the $k$ bits of the message. The message appears as it is inside the codeword and can directly extracted from the encoded information. 
 
-\noindent First the message polynomial (in the form of $m(X) = m_{0} + m_{1}X+...+m_{k-1}X^{k-1}$) should be converted into a vector of the length $n$. 
+Encoding a message vector into a linear cyclic code, $C_{cyc}(n,k)$, in systematic form can be achieved as follows:
+
+First the message polynomial (in the form of $m(X) = m_{0} + m_{1}X+...+m_{k-1}X^{k-1}$) should be converted into a vector of the length $n$. 
 This is attained by multiplying the message vector by $X^{n-k}$, which results in a shift of the message $n-k$ to the right and forms the right-shifted message polynomial $X^{n-k}m(X)$.
 
-\noindent Secondly, the right-shifted message polynomial should be divided by a generator polynomial, $g(X)$, fitting the conditions for being a generator polynomial of a linear cyclic code. 
+Secondly, the right-shifted message polynomial should be divided by a generator polynomial, $g(X)$, fitting the conditions for being a generator polynomial of a linear cyclic code. 
 The result of this division is a remainder polynomial (redundancy polynomial).
 
-\noindent Finally, the code polynomial in systematic form can be obtained by adding the right-shifted message polynomial and the remainder polynomial: 
+Finally, the code polynomial in systematic form can be obtained by adding the right-shifted message polynomial and the remainder polynomial: 
 \begin{equation}
 c(X) = X^{n-k}m(X)+p(X)
 \label{eq:code polynomail formular}
 \end{equation}
 
-\noindent The following equations describe the relationships between the right-shifted message polynomial, $X^{n-k}m(X)$, the factor, $q(X)$, the generator polynomial, $g(X)$, and the remainder polynomial, $p(X)$.  
+The following equations describe the relationships between the right-shifted message polynomial, $X^{n-k}m(X)$, the factor, $q(X)$, the generator polynomial, $g(X)$, and the remainder polynomial, $p(X)$.  
 
 \begin{equation}
 X^{n-k}m(X) = q(X)g(X)+p(X)
@@ -41,12 +50,12 @@ X^{n-k}m(X)+p(X) = q(X)g(X)
 \noindent A concrete example with the generator polynomial $g(X)=1+X^4+X^6+X^7+X^8$ is used to encode the following message polynomial:
 $m(X)=1+X^2+X^4+X^6$, corresponding to $m=[1010101]$. The code is a cyclic code, $C_{cyc}(15,7)$.
 
-\noindent First the message is right shifted $n-k$ times.
+First the message is right shifted $n-k$ times.
 \begin{equation}
 X^{15-7}m(X) = X^8+X^{10}+X^{12}+X^{14}
 \end{equation}
 
-\noindent Find $p(X)$ by taking the remainder from $X^{n-k}m(x)$ divided by $g(X)$.
+Find $p(X)$ by taking the remainder from $X^{n-k}m(x)$ divided by $g(X)$.
 
 \[
 \renewcommand\arraystretch{1.2}
@@ -72,14 +81,14 @@ X^{15-7}m(X) = X^8+X^{10}+X^{12}+X^{14}
 \end{array}
 \]
 
-\noindent Now $c(X)$ can be calculated:
+Now $c(X)$ can be calculated:
 \begin{align}
 c(X) &= X^8m(X)+p(X)\\ 
 	&= 1 + X^2 + X^5 + X^6 + X^7 + X^8 + X^{10}+ X^{12} + X^{14} \\
 c &= [1 0 1 0 0 1 1 1 1 0 1 0 1 0 1]
 \end{align}
 
-\noindent It is easily seen that the encoded vector is in systematic form, hence the message vector corresponds to the last 7 bits.
+It is easily seen that the encoded vector is in systematic form, hence the message vector corresponds to the last 7 bits.
 
 \subsection{Decoding}
 In general when decoding a received vector, $ r(X) $, the syndrome vector, $ S(X) $, is needed to find out if any errors have happen.
