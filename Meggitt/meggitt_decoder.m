@@ -1,16 +1,17 @@
 function [error_vec, code_vec, tag] = meggitt_decoder(r, g, n, k)
 % function r_corrected = meggitt_decoder(r, g)
-% Decodes and corrects a received vector, r, from the generator polynomial, g.
+% Decodes and corrects t errors in the received vector, r, from the generator polynomial, g.
 % Input:
 % r             is the received vector (maybe with errors)
 % g             is the generator polynomial written in vector form,
 %               e.g. [1 0 1 1] for g(X) = 1 + X^2 + X^3
 % Output:
-% error_vec     is the error vector (e(X))
-% code_vec      is the corrected received vector
+% error_vec     is the error vector, e(X)
+% code_vec      is the corrected received vector, r'(X)
+% tag           is a string which indicate how the decoded went
 
 
-% load the syndromes for 1 or 2 errors in a received vector. It comes from
+% Generate syndrome error pattern from
 % the generator polynomial g(X) = 1+X^4+X^6+X^7+X^8. The table is af 15x8
 % matrix called syndromes_errorpattern.
 syndromes_errorpattern = generateErrorPattern(g,n,k);
