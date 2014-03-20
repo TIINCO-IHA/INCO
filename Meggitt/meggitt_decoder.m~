@@ -13,7 +13,7 @@ function [error_vec, code_vec, tag] = meggitt_decoder(r, g, n, k)
 % load the syndromes for 1 or 2 errors in a received vector. It comes from
 % the generator polynomial g(X) = 1+X^4+X^6+X^7+X^8. The table is af 15x8
 % matrix called syndromes_errorpattern.
-syndromes_errorpattern = generateErrorPattern(g,n,k);
+generateErrorpattern
 
 % Initialize error vector
 error_vec = zeros(1,n);

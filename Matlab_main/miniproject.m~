@@ -45,11 +45,7 @@ r(errorlocation) = mod(c(errorlocation)+1,2);
 
 [e, r_c, tag] = meggitt_decoder(r, g, n, k);
 
-if(isequal(c, r_c) == 0)
-    disp('The codeword was not decoded correct');
-else
-    disp('The codeword was successfully decoded');
-end
+if(isequal(c, r_c)
 
 c_t = mat2str(c);
 e_t = mat2str(e);
