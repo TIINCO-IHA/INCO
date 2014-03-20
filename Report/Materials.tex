@@ -43,7 +43,7 @@ c(X) = X^{n-k}m(X)+p(X)
 \end{equation}
 \end{enumerate}
 
-The following equations describe the relationships between the right-shifted message polynomial, $X^{n-k}m(X)$, the factor, $q(X)$, the generator polynomial, $g(X)$, and the remainder polynomial, $p(X)$.  
+The following equations describe the relationships between the right-shifted message polynomial, $X^{n-k}m(X)$, the quotient, $q(X)$, the generator polynomial, $g(X)$, and the remainder polynomial, $p(X)$.  
 
 \begin{align}
 & X^{n-k}m(X) = q(X)g(X)+p(X)\\
@@ -129,7 +129,7 @@ It is known that
 r(X) = q(X) \cdot g(x) \oplus S(X)
 \end{equation}
 
-where $q(X)$ is a factor.
+where $q(X)$ is a quotient.
 \\
 
 When encoding $c(X)$ and combining equation \ref{eq:code_polynomial_formular} and \ref{eq:encoding} it is seen that $q(X) \cdot g(X) = c(X)$.
@@ -146,7 +146,7 @@ Thus $ c(X) $ is isolated:
 c(X) = r(X) \oplus e(X)
 \end{equation}
 
-This means that when the error has been located it can be removed by multiplying it to $ r(X) $.
+This means that when the error has been located it can be removed by adding it to $ r(X) $.
 
 
 
@@ -194,11 +194,8 @@ At this point the feedback from the error pattern circuit is not used.
 \item The syndrome is checked in the error pattern detection circuit.
 If the syndrome is in the error pattern lookup table there is an error in the last bit in the buffer register, and the error pattern detection circuit output will be 1.
 If the syndrome does not match any error pattern, the output will be 0.
-\item The rightmost symbol in the buffer register is read out at the same time as the syndrome register is shifted once.
-If an error has been detected it is feedback to he shifted syndrome register which modify the syndrome.
-The error is also multiplied to the symbol which has been read out of the buffer. 
-\item The new syndrome is match the new rightmost symbol in the buffer.
-Step 2 and 3 is repeated.
+\item The rightmost bit in the buffer is read out and the syndrome register is shifted. If any error has been detected in step 2 the feedback from the error pattern detection circuit will modify the syndrome register and will be multiplied to the bit which has been read out from the buffer. 
+\item The new syndrome is matched the new rightmost symbol in the buffer. Step 2 and 3 are repeated.
 \item The received vector is decoded symbol by symbol until the whole received vector has been read out of the buffer register.
 \end{enumerate}
 

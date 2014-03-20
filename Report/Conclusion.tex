@@ -3,25 +3,20 @@
 \begin{document}
 
 \section{Conclusion}
-In this mini-project an encoder and a Meggitt decoder for a $C_{cyc}(15,7)$ with the general polynomial $g(X)=1+X^4+X^6+X^7+X^8$ have been developed.
-The encoder should generate a codeword from $g(X)$ and add 2 or less errors to to it.
-The Meggitt decoder should be able to correct 2 or less errors and able to detect 3 or more errors.
-\\
-\\
-The project have successfully made an encoder which is able to create a codeword with 3 or less errors.
-It was also successful in making a Meggitt decoder which can  correct 2 or less errors.
-The Meggitt decoder is able to detect most of the errors in codewords with 3 errors, but some times it correct them as 2 errors codeword.
-As explained in the result, this could be because the codeword is the same as an other codeword with only 2 errors.
-Therefore the Meggitt decode, do not know which codeword is the original and will handle it as the codeword with less errors.  
-\\
-\\
-Overall the project have been successful.
-The project is able of doing what was required and the members have learned a lot about encoding and Meggitt decoding.
-It has been hard to learn the principle in the Meggitt decoder, but when this was all clear, it was easy to make the code and test it as well.
-The hard part was to understand is the feedback in the syndrome register in the Meggitt decoder.
-Which block register should have feedback?
-In the example the delivered material about decoding of cyclic codes was implemented and extended to a 15 length codeword.
+In this mini-project a cyclic code encoder and a Meggitt decoder for a $C_{cyc}(15,7)$ with the general polynomial $g(X)=1+X^4+X^6+X^7+X^8$ have been developed.
+The encoder should generate a codeword from $g(X)$ and introduce 2 or less errors to it.
+The Meggitt decoder should be capable of correcting 2 or less errors and able to detect 3 or more errors.
+
+The project has resulted in a cyclic code encoder which is able to create a codeword with 3 or less errors as well as a Meggitt decoder which can correct 2 or less errors.
+The Meggitt decoder is able to detect most of the errors in codewords with 3 errors, but some times it corrects them as 2 error codewords.
+As explained in the result, this could be due to the fact that the codeword is the same as another codeword with only 2 errors. Because of this the Meggitt decoder does not know which codeword is the original and will handle it as the codeword with less errors.  
+
+Overall the project has been successful.
+The codes implemented in Matlab is able to do what is required and the members have learned a lot about encoding and Meggitt decoding.
+It has been hard to learn the principles of the Meggitt decoder, but when this was all clear, it was easy to make the code and test it as well.
+The hard part was to understand the character of the feedback in the syndrome register in the Meggitt decoder concerning which block register should receive feedback.
+The examples in this report about decoding was initially implemented and extended to a 15 length codeword based on the examples in the hand out material about decoding of cyclic codes.
 But some of the things that happened when initializing the syndrome register did not make sense and it was hard to figure out why.
-When it was clear that the feedback in the syndrome register was depending on the general polynomial, it make a lot of sense and it was possible to make the code which gave the expected result.
+When it was clear that the feedback in the syndrome register was depending on the general polynomial, it made a lot more sense and it was possible to make the code which gave the expected result.
 
 \end{document}
