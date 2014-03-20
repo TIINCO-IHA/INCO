@@ -29,6 +29,7 @@ This case study concerns the implementation of a Meggitt decoder which has been 
 
 
 \subsection{Implementation of Encoder}
+\label{sec:ImplementEncoder}
 The implemented encoder is a Matlab function, $cyclicEncoder$. The encoder is able to encode a message vector into systematic code by receiving a generator polynomial $g$ and a message vector $m$. In addition the encoder has been made generic so that it also is possible to state the code length $n$ and the message length $k$ - if nothing is stated, the default value of n is 15 and k is 7. The output of the function is a code vector, $c$. 
 
 \noindent Initially the function converts the message polynomial in vector form into a vector of the length n by shifting it $n-k$ to the right and thereby forming the polynomial $X^{n-k}m(X)$. 
@@ -58,77 +59,136 @@ The implemented encoder is a Matlab function, $cyclicEncoder$. The encoder is ab
  c = mod(shifted_m+p,2);
 \end{lstlisting}
 
-\subsection{Implementation of Main Function}
-The main function, $miniproject$, can correct up to two errors where the errors can be specified in numbers and location.
+\subsection{Implementation of Meggitt decoder}
+\label{sec:ImplementMeggittDecoder}
+The Meggitt decoder is able to decode an input message, $r(X)$, which may contain 1 or 2 error and return the correct output vector, $v(X)$.
+If $r(X)$ contains 3 error it the decoder should be able to detect error but not able to correct it.
 
-The first parameter is the error-count which specifies how many errors the function should correct.
-The main function can also be called without any parameters and will set the default error-count to 2   
+When calling the Meggitt decoder is start with calculate the error pattern as in section \ref{sec:MeggittDedocerMaterial} matrix \ref{lst:ErrorPattern} and finding the corresponding syndromes matrix \ref{lst:syndromeErrorPattern}.
+In Matlab this is done with the function in \codeTitle \ref{lst:ErrorPatternCreate}
 
-\begin{lstlisting}[caption=Main Function, style=Code-Matlab, label=lst:refID]
-function test = miniproject(t_errors, errorloc)
-% function test = miniproject(t_errors, errorloc)
-% t_errors:       Number of errors to be introduced. Maximum 2. Default 2.
-% errorloc:       Location of the t_errors errors. Should be a vector with
-%                 scalars between 1-15 corresponding to bit location 1-15 (degree 0-14).
-% test:           Returns one if the decoded message, c, is equal to the input
-%                 message, r.
-addpath('../Encoder');
-addpath('../Meggitt');
-
-% Generate message vector
-n = 15;
-k = 7;
-% g(x) = 1+X^4+X^6+X^7+X^8
-g = [1 0 0 0 1 0 1 1 1];
-
-if(nargin < 1)  % no input parameters
-    t = 2;
-    errorlocation = sort(randi(n,1,t));
-elseif(nargin > 0)
-    t = t_errors;
-    if(nargin < 2)
-        errorlocation = sort(randi(n,1,t));
-    else
-        errorlocation = sort(errorloc);
-    end
-end
-
-% generate random numbers in GF(2)
-m = mod(randi(2,1,k),2);
-
-% Encode message vector by the ciclic code encoder
-c = cyclicEncoding(g,m,n,k);
-
-while(t > 2 && length(unique(errorlocation)) ~= t)
-    errorlocation = sort(randi(n,1,t));
-    disp('Errorlocation was recalculated!');
-end
-r = c;
-
-% Flip bit at generated error location i the received vector.
-% Add 1 and modulo 2 for binary addition
-r(errorlocation) = mod(c(errorlocation)+1,2);
-
-% Decode the received vector by the meggitt decoder
-
-[e, r_c, tag] = meggitt_decoder(r, g, n, k);
-
-if(isequal(c, r_c) == 0)
-    disp('The codeword was not decoded correct');
-else
-    disp('The codeword was successfully decoded');
-end
-
-c_t = mat2str(c);
-e_t = mat2str(e);
-r_t = mat2str(r);
-rc_t = mat2str(r_c);
-t_out = 'The coded vector is    c = %s.\nAfter transmission is  r = %s.\nThe error vector is    e = %s.\nThe corrected vector r_c = %s\nThe tag from the decoder claims: %s.\n';
-fprintf(t_out,c_t,r_t,e_t,rc_t,tag);
-% clear c_t; clear e_t; clear r_t; clear rc_t; clear t_out;
-
-save variables
-test = isequal(c, r_c);
+\begin{lstlisting}[caption=Error pattern creation, style=Code-Matlab, label=lst:ErrorPatternCreate]
+ function syndromes_errorpattern = generateErrorPattern(g,n,k)
+ % generate syndrome error pattern
+ 
+ errorpattern = fliplr(eye(n));
+ errorpattern(:,n) = 1;
+ syndromes_errorpattern = zeros(n,n-k);
+ 
+ for i = 1:n
+     [q, s] = gfdeconv(errorpattern(i,:), g, 2);
+     if(length(s) ~= n-k)
+         syndromes_errorpattern(i,:) = [s zeros(1,n-k-length(s))];
+     else
+         syndromes_errorpattern(i,:) = s;
+     end
+ end
 \end{lstlisting}
+
+The initiation of the syndrome register is happening next.
+As it was shown in \fxnote{HENVISNING TIL AFSNIT MEGGITT DECODER} the initialization of the syndrome register is the same at making a polynomial division of $S(X)$ and $g(X)$.
+With this knowledge the function in MatLab is as shown in \codeTitle \ref{lst:SyndromeInit}.
+If the syndrome vector is less than $k$, when it don't have any bit in the high end, the syndrome is filled up with zeros so they all have a length of $k$.
+
+\begin{lstlisting}[caption=Syndrome initialization, style=Code-Matlab, label=lst:SyndromeInit]
+ function iSyndrome = init_Syndrome(r,g,n,k)
+ % function iSyndrome = init_Syndrome(r,g,n,k)
+ 
+ [q, iSyndrome] = gfdeconv(r,g,2);
+ 
+ if(length(iSyndrome) ~= n-k)
+     iSyndrome = [iSyndrome zeros(1,n-k-length(iSyndrome))];
+ end
+\end{lstlisting}
+
+The Meggitt decoder is now ready to decode which is happening in \codeTitle \ref{lst:ErrorDetection}.
+Start to check for whether the syndrome has an error or not, by checking the syndrome with all the syndromes in the $syndrome\_errorpattern$.
+If it has an error the end bit in the buffer, here $r$, is corrected before it is shifted.
+After the shift a new syndrome is calculated and make sure the length is $k$.
+
+\begin{lstlisting}[caption=Error detection, style=Code-Matlab, label=lst:ErrorDetection]
+ for i = 1:n
+     % Test of syndrome is equal to one of the error syndromes
+     for b = 1:n
+         % Check if the calculated syndrome is equal to one of the rows in syndrome
+         % table
+         if(isequal(si, syndromes_errorpattern(b,:))==1)
+             % correct bit, if error happened
+             error_vec(i) = 1;
+             r(end) = mod(r(end)+1,2);
+         end
+     end
+     
+     % Right shift the received vector 1 bit
+     ri = circshift(r, [1 1]);
+     % Calculate new syndrome register
+     [q, si] = gfdeconv(ri,g,2);
+     % Set r to ri (make the shift in memory too)
+     r = ri;
+     % zeropad si to compare with the syndrome table
+     if(length(si) ~= n-k)
+         si = [si zeros(1,n-k-length(si))];
+     end
+ end
+\end{lstlisting}
+
+After the decoding it sum up all information to create the tag and return the error vector and the code vector.
+This MatLab code is shown in \codeTitle \ref{lst:DecodeReturn}.
+
+\begin{lstlisting}[caption=Meggitt decode return, style=Code-Matlab, label=lst:DecodeReturn]
+ if sum(si)~=0 && sum(error_vec) > 2
+     tag = 'The received vector contains more than 2 errors';
+ elseif sum(si)==0 && sum(error_vec) <= 2 && sum(error_vec) >= 1
+     tag = ['The decoder has corrected ', num2str(sum(error_vec)), ' error(s)'];
+ else
+     tag = 'The received vector contains more than 2 errors';
+ end
+ 
+ error_vec = fliplr(error_vec);
+ code_vec = r;
+\end{lstlisting}
+
+\subsection{Implementation of Main Function}
+The main function generates a message vector, encodes it into a code vector, transmits it and hereby introduces errors in the code vector, and finally decodes the code vector using Meggitt decoding.
+
+\noindent The main function makes use of the generic cyclic encoder section \ref{sec:ImplementEncoder} and the Meggitt decoder section \ref{sec:ImplementMeggittDecoder}. It is possible to decide how many errors, $t$, should be introduced during transmission, as well as it is possible to manually introduce the error location(s). The errors information send as parameters are handled by the code in \codeTitle \ref{lst:errorHandling}.
+
+\begin{lstlisting}[caption=Error handling, style=Code-Matlab, label=lst:errorHandling]
+ if(nargin < 1)  % no input parameters
+     t = 2;
+     errorlocation = sort(randi(n,1,t));
+ elseif(nargin > 0)
+     t = t_errors;
+     if(nargin < 2)
+         errorlocation = sort(randi(n,1,t));
+     else
+         errorlocation = sort(errorloc);
+     end
+ end
+\end{lstlisting}
+
+\noindent Initially the code length, the message length and the generator polynomial are set. A message vector is generated and by the cyclic encoder encoded into a code vector. 
+
+\noindent Secondly, the number of errors to be introduced are stated and random error location(s) are generated. The code vector is put into the received vector and the bits at the error location(s) in the received vector are flipped. This is shown in \codeTitle \ref{lst:GenerateVector}
+
+\begin{lstlisting}[caption=Generating vector, style=Code-Matlab, label=lst:GenerateVector]
+ % Generate a message vector by using random numbers in GF(2))
+ m = mod(randi(2,1,k),2);
+
+ % Encode the message vector by the cyclic code encoder function
+ c = cyclicEncoding(g,m,n,k);
+
+ while(t > 2 && length(unique(errorlocation)) ~= t)
+     errorlocation = sort(randi(n,1,t));
+     disp('Errorlocation was recalculated!');
+ end
+ r = c;
+
+ % Flip bit at generated error location i the received vector.
+ % Add 1 and modulo 2 for binary addition
+ r(errorlocation) = mod(c(errorlocation)+1,2);
+\end{lstlisting}
+
+\noindent After calling the Meggit decoder the main print out the different result in the commander prompt and returning the test whether the send message is equal with the decoded message.
 
 \end{document}
