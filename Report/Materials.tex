@@ -4,7 +4,6 @@
 \section{Materials and Methods}
 This section describes the theory for the encoding and Meggitt decoding of a cyclic code. Both encoding and decoding is explained with concrete examples which are also testable with the enclosed \textsc{Matlab} scripts. Knowledge is obtained through TI-INCO course lessons, the ``Essentials of Error-Control Coding'' text book by Jorge Casti\~{n}eira Moreira and Patrick Guy Farrell and through delivered material about decoding of cyclic codes (chapter 5.5).
 
-(Teori om encoding og decoding)
 \subsection{Encoding}
 %(Matematisk eksempel)
 \noindent When a code is in systematic form the message vector can be directly extracted from the encoded information. 
@@ -16,7 +15,6 @@ This section describes the theory for the encoding and Meggitt decoding of a cyc
 \noindent Secondly, the right-shifted message polynomial should be divided by a generator polynomial, $g(X)$, fitting the conditions for being a generator polynomial of a linear cyclic code. The result of this division is a remainder polynomial (redundancy polynomial).
 
 \noindent Finally, the code polynomial in systematic form can be obtained by adding the right-shifted message polynomial and the remainder polynomial: 
-
 \begin{equation}
 c(X) = X^{n-k}m(X)+p(X)
 \label{eq:code polynomail formular}
@@ -46,7 +44,6 @@ X^{15-7}m(X) = X^8+X^{10}+X^{12}+X^{14}
 
 \noindent Find $p(X)$ by taking the remainder from $X^{n-k}m(x)$ divided by $g(X)$.
 
-
 \[
 \renewcommand\arraystretch{1.2}
 \begin{array}{cccccccccccccccccc}
@@ -72,7 +69,6 @@ X^{15-7}m(X) = X^8+X^{10}+X^{12}+X^{14}
 \]
 
 \noindent Now $c(X)$ can be calculated:
-
 \begin{align}
 c(X) = X^8m(X)+p(X) = 1 + X^2 + X^5 + X^6 + X^7 + X^8 + X^{10}+ X^{12} + X^{14} \\
 c = [1 0 1 0 0 1 1 1 1 0 1 0 1 0 1]
@@ -101,8 +97,8 @@ If the syndrome vector is not an all zero vector it can tell where one or more e
 Every possible error is mapped to a specific syndrome.
 The error capability and the error detection can be found in this way:
 \begin{eqnarray}
-error detection = d_{min}-1\\
-error correction = t = \frac{d_{min}-1}{2}
+Error \: Detection = d_{min}-1\\
+Error \: Correction = t = \frac{d_{min}-1}{2}
 \end{eqnarray}
 When the error is found it can be corrected.
 It is known that
@@ -204,12 +200,23 @@ shift_{13}: \quad input = 1 \quad 001{\color{cyan}0}1{\color{cyan}00}1 \quad \Ri
 shift_{14}: \quad input = 1 \quad 000{\color{cyan}1}1{\color{cyan}11}1 \quad \Rightarrow \quad 00000100\\
 shift_{15}: \quad input = 0 \quad 000{\color{cyan}0}0{\color{cyan}10}0 \quad \Rightarrow \quad 00000010
 \end{eqnarray*}
-After shifted$  r(X) $ into the syndrome register the syndrome has a 1 on the 7'th bit, which is the syndrome pattern matching the error pattern for $X^6$.
+After shifted $r(X)$ into the syndrome register the syndrome has a 1 on the 7'th bit, which is the syndrome pattern matching the error pattern for $X^6$.
 This bit was flipped in the received vector to introduce an error.
-An other way to find the syndrome matching $ r(X) $ is to make the polynomial division as in Equation \ref{syndrom formular}.
+An other way to find the syndrome matching $ r(X) $ is to make the polynomial division as in Equation \ref{syndrom formular}. SKAL DETTE BEVISES???????????????????????????????????????????
 
-It will know be shown what happens in the syndrome register when shifting and correcting the error.
-As $ r(X) $ is not used any more, the input is set to the error output which is zero when no error is detected in the last bit.
+The $r(X)$ in the buffer match the $S(X)$ in the syndrome register, but what happens with $S(X)$ when the $r(X)$ is shifted in the buffer?
+When $r(X)$ is cyclic right shifted it becomes $r^{(1)}(X)$ and has a cosponsoring $S^{(1)}(X)$.
+This $S^{(1)}(X)$ can be found by multiply it with X and make a polynomial division with $g(X)$ as shown below.
+\begin{eqnarray}
+\label{S(X) after right shift}
+S^{(1)}(X) = X \cdot S(X) \: mod \: g(X)
+\end{eqnarray} 
+The list of shifts below shows how the syndrome is changing when right shifting.
+The input is no longer from $r(X)$ but is the error output, which is zero when no error has been detected in the last bit. 
+Looking at shift 3 as an example of Equation \ref{S(X) after right shift}, the syndrome register contains $10001011 \Rightarrow 1+X^4+X^6+X^7$ before shifting.
+When right shifting it becomes $X+X^5+X^7+X^8 = X \cdot S(X)$.
+Finding $S^{(1)}(X)$ with the polynomial division of $g(X)$ gives $1+X+X^4+X^5+X^6 \Rightarrow 11001110$.
+This $S^{(1)}(X)$ match the $r^{(1)}(X)$ which is in the buffer after the shift.
 \begin{eqnarray*}
 \textbf{shift no. \quad	input \quad old syn \qquad \quad new syn}\\
 shift_1: \quad input = 0 \quad 00000010 \quad \Rightarrow \quad 00000001\\
@@ -220,18 +227,8 @@ shift_4: \quad input = 0 \quad 01100111 \quad \Rightarrow \quad 10111000\\
 shift_5: \quad input = 0 \quad 10111000 \quad \Rightarrow \quad 01011100\\
 shift_6: \quad input = 0 \quad 01011100 \quad \Rightarrow \quad 00101110\\
 shift_7: \quad input = 0 \quad 00101110 \quad \Rightarrow \quad 00010111\\
-shift_8: \quad input = 1 \quad 00010111 \quad \Rightarrow \quad 00000000\\
+shift_8: \quad input = 1 \quad 00010111 \quad \Rightarrow \quad 00000000
 \end{eqnarray*}
-In shift 7 the syndrome matching the error pattern for one error at the last bit occur.
+After 7 shift 7 the syndrome match the error pattern for one error at the last bit.
 After the 8'th bit the syndrome becomes a all zero vector, which indicates that there is no more errors in the buffer.
- 
-
-
-
-
-
-
-
-
-
 \end{document}

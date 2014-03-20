@@ -6,18 +6,18 @@
 English text!
 
 \begin{lstlisting}[caption=Overskrift, style=Code-Matlab, label=lst:refID]
-g = [1 1 1 1 0 0 0 0];
-pol = cyclpoly(8,5);
-[parmat,genmat,k] = cyclgen(8,pol);
-genmat
+ g = [1 1 1 1 0 0 0 0];
+ pol = cyclpoly(8,5);
+ [parmat,genmat,k] = cyclgen(8,pol);
+ genmat
 
-if genmat(1,:) == g
-    disp('Equal')
-else
-    disp('Not equal')
-end
+ if genmat(1,:) == g
+     disp('Equal')
+ else
+     disp('Not equal')
+ end
 
-valid_code = encode(m, 8, 5, 'cyclic', pol)
+ valid_code = encode(m, 8, 5, 'cyclic', pol)
 \end{lstlisting}
 
 \end{document}
