@@ -3,8 +3,8 @@ function test = miniproject(t_errors, errorloc)
 % t_errors:       Number of errors to be introduced. Maximum 2. Default 2.
 % errorloc:       Location of the t_errors errors. Should be a vector with
 %                 scalars between 1-15 corresponding to bit location 1-15 (degree 0-14).
-% test:           Returns zero if the decoded message is equal to the input
-%                 message.
+% test:           Returns one if the decoded message, c, is equal to the input
+%                 message, r.
 addpath('../Encoder');
 addpath('../Meggitt');
 
