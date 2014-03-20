@@ -45,9 +45,9 @@ In Figure \ref{fig:result-3-errors} it is seen that it is possible to detect, th
 \label{fig:result-3-errors}
 \end{figure}
 
-Carrying out this project, all the encoding and decoding procedures have been calculated by hand simultaneous with the Matlab code development.
-The calculations in hand have been done to ensure that the Matlab codes have been developed in the right way.
-A codes has been generated and tested in Matlab and by hand as well, and the results have been matched.
+Carrying out this project, all the encoding and decoding procedures have been calculated by hand simultaneous with the \texttt{Matlab} code development.
+The calculations in hand have been done to ensure that the \texttt{Matlab} codes have been developed in the right way.
+A code has been generated and tested in \texttt{Matlab} and by hand as well, and the results have been matched.
 When the results differed the procedures have been checked and errors have been corrected.
 
 The function \texttt{miniproject(t\_errors, errorloc)} is able to correct 1 and 2 errors in a codeword, which can be seen in Figure \ref{fig:result-1-errors}, \ref{fig:result-2-errors} and \ref{fig:result-2-errors-location}.
@@ -66,7 +66,7 @@ When introducing 3 or more errors, there is a possibility that it is getting a d
 In the way the \texttt{miniproject(t\_errors, errorloc)} has been implemented it will always look for the codeword with the shortest distance, which it is why it will reach a valid but wrong codeword.
 This might be corrected in the code so when 1 error has been found the decoder knows that if there should be another error it should be when there is only one error in the rightmost bit.
 So by minimizing the error pattern table when an error has been detected ensures that the function does not use the error pattern for 2 errors twice.
-This is not implemented in Matlab, but would be a next step to go. 
+This is not implemented in \texttt{Matlab}, but would be a next step to go. 
 
 
 

@@ -11,9 +11,9 @@
 %
 %(Problemer undervejs --> faldgruber)
 
-This case study concerns the implementation of a Meggitt decoder which has been implemented in Matlab. 
+This case study concerns the implementation of a Meggitt decoder which has been implemented in \texttt{Matlab}. 
 
-The Meggitt decoder is implemented as a function that can decode cyclic codes based on the Meggitt algorithm. Besides the Meggitt decoder function the Matlab codes consist of two other functions: a cyclic code encoder, and a main function.
+The Meggitt decoder is implemented as a function that can decode cyclic codes based on the Meggitt algorithm. Besides the Meggitt decoder function the \texttt{Matlab} codes consist of two other functions: a cyclic code encoder, and a main function.
 
 The cyclic code encoder encodes a message vector into systematic code. The main function generates a message vector and then uses the cyclic code encoder to encode the message vector. It then transmits the code vector through an artificial communication channel and hereby introduces errors to the code vector. Finally it uses the Meggitt decoder to decode the received vector. 
 
@@ -38,7 +38,7 @@ All three functions are described in detail in the following.
 
 \subsection{Implementation of Encoder}
 \label{sec:ImplementEncoder}
-The implemented encoder is a Matlab function, \texttt{cyclicEncoder}. The encoder is able to encode a message vector into systematic code by receiving a generator polynomial $g$ and a message vector $m$. In addition the encoder has been made generic so that it also is possible to state the code length $n$ and the message length $k$ - if nothing is stated, the default value of n is 15 and k is 7. The output of the function is a code vector, $c$. 
+The implemented encoder is a \texttt{Matlab} function, \texttt{cyclicEncoder}. The encoder is able to encode a message vector into systematic code by receiving a generator polynomial $g$ and a message vector $m$. In addition the encoder has been made generic so that it also is possible to state the code length $n$ and the message length $k$ - if nothing is stated, the default value of n is 15 and k is 7. The output of the function is a code vector, $c$. 
 
 Initially the function converts the message polynomial in vector form into a vector of the length n by shifting it $n-k$ to the right and thereby forming the polynomial $X^{n-k}m(X)$. 
 
@@ -101,7 +101,7 @@ In Matlab this is done with the function in \codeTitle \ref{lst:ErrorPatternCrea
 \end{lstlisting}
 
 Next is the initiation of the syndrome register.
-As it was shown in section \ref{sec:Meggitt} the initialization of the syndrome register is the same as making a polynomial division of $S(X)$ and $g(X)$. With this knowledge the function is implemented in Matlab is as shown in \codeTitle \ref{lst:SyndromeInit}.
+As it was shown in section \ref{sec:Meggitt} the initialization of the syndrome register is the same as making a polynomial division of $S(X)$ and $g(X)$. With this knowledge the function is implemented in \texttt{Matlab} is as shown in \codeTitle \ref{lst:SyndromeInit}.
 If the syndrome vector is smaller than $k$, the syndrome is filled up with zeros so they all have a length of $k$.
 
 \begin{lstlisting}[caption=Syndrome Initialization, style=Code-Matlab, label=lst:SyndromeInit]
@@ -149,7 +149,7 @@ After the shift a new syndrome is calculated and it is ensured, that the length 
 
 After the decoding the Meggitt decoder sums up all information to create a tag to indicate whether the code is decodable or undecodable but detectable, and returns the error vector and the code vector.
 
-This Matlab code for this is shown in \codeTitle \ref{lst:DecodeReturn}.
+This \texttt{Matlab} code for this is shown in \codeTitle \ref{lst:DecodeReturn}.
 
 \begin{lstlisting}[caption=Meggitt Decoder's Return, style=Code-Matlab, label=lst:DecodeReturn]
  if sum(si)~=0 && sum(error_vec) > 2
@@ -177,7 +177,9 @@ The main function generates a message vector, encodes it into a code vector, tra
 The main function makes use of the implementations of the generic cyclic encoder and the Meggitt decoder described in sections \ref{sec:ImplementEncoder} and \ref{sec:ImplementMeggittDecoder}. 
 When using the main function it is possible to decide how many errors, $t$, should be introduced during transmission, as well as it is possible to manually introduce the error location(s).
 
-Initially the code length, the message length and the generator polynomial are set. A message vector is generated and encoded into a code vector by the cyclic encoder. This is shown in \codeTitle \ref{lst:GenerateVector}. 
+Initially the code length, the message length and the generator polynomial are set. 
+A message vector is generated and encoded into a code vector by the cyclic encoder. 
+This is shown in \codeTitle \ref{lst:GenerateVector}. 
 
 \begin{lstlisting}[caption=Generating and Encoding a Vector, style=Code-Matlab, label=lst:GenerateVector]
  % Set the code length, message length and the generator polynomial
@@ -196,7 +198,8 @@ Secondly, one or more errors are introduced to the code vector depending on the 
 The error locations used will be according to the arguments received by the main function - if no specific error locations have been stated random error location(s) will be generated. 
 The code vector is put into the received vector and the bits at the error location(s) in the received vector are flipped.
 
-Finally, the received vector is decoded by the Meggitt decoder and it is verified whether the decoded vector is equal to the code vector. The result of whether the decoding was successfull or not is printed.
+Finally, the received vector is decoded by the Meggitt decoder and it is verified whether the decoded vector is equal to the code vector. 
+The result of whether the decoding was successful or not is printed.
 
 The error handling, decoding and the verification of the decoding is shown in \codeTitle \ref{lst:errorHandling}.
 
