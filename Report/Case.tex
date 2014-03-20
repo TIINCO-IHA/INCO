@@ -11,32 +11,31 @@
 %
 %(Problemer undervejs --> faldgruber)
 
-\subsection{Case Study}
 This case study concerns the implementation of a Meggitt decoder which has been implemented in Matlab. 
 
-\noindent The Meggitt decoder is implemented as a function that can decode cyclic codes based on the Meggitt algorithm. Besides the Meggitt decoder function the Matlab codes consist of two other functions: a cyclic code encoder, and a main function.
+The Meggitt decoder is implemented as a function that can decode cyclic codes based on the Meggitt algorithm. Besides the Meggitt decoder function the Matlab codes consist of two other functions: a cyclic code encoder, and a main function.
 
-\noindent The cyclic code encoder encodes a message vector into systematic code. The main function generates a message vector and then uses the cyclic code encoder to encode the message vector. It then transmits the code vector through an artificial communication channel and hereby introduces errors to the code vector. Finally it uses the Meggitt decoder to decode the received vector. 
+The cyclic code encoder encodes a message vector into systematic code. The main function generates a message vector and then uses the cyclic code encoder to encode the message vector. It then transmits the code vector through an artificial communication channel and hereby introduces errors to the code vector. Finally it uses the Meggitt decoder to decode the received vector. 
 
-\noindent The conditions given for the case study are: 
+The conditions given for the case study are: 
 \begin{itemize} \itemsep0pt \parskip0pt \parsep0pt
 \item Code length: 15
 \item Message length: 7
 \item Generator polynomial: $g(X)=1+X^4+X^6+X^7+X^8$
 \end{itemize} 
 
-\noindent All three functions are described in detail in the following. 
+All three functions are described in detail in the following. 
 
 
 \subsection{Implementation of Encoder}
 \label{sec:ImplementEncoder}
 The implemented encoder is a Matlab function, $cyclicEncoder$. The encoder is able to encode a message vector into systematic code by receiving a generator polynomial $g$ and a message vector $m$. In addition the encoder has been made generic so that it also is possible to state the code length $n$ and the message length $k$ - if nothing is stated, the default value of n is 15 and k is 7. The output of the function is a code vector, $c$. 
 
-\noindent Initially the function converts the message polynomial in vector form into a vector of the length n by shifting it $n-k$ to the right and thereby forming the polynomial $X^{n-k}m(X)$. 
+Initially the function converts the message polynomial in vector form into a vector of the length n by shifting it $n-k$ to the right and thereby forming the polynomial $X^{n-k}m(X)$. 
 
-\noindent Secondly, the now right-shifted message polynomial is divided by the generator polynomial to find the remainder polynomial, $p(X)$.
+Secondly, the now right-shifted message polynomial is divided by the generator polynomial to find the remainder polynomial, $p(X)$.
 
-\noindent Finally, adding the right-shifted message polynomial and the remainder polynomial results in the code polynomial.  
+Finally, adding the right-shifted message polynomial and the remainder polynomial results in the code polynomial, $c$.  
 
 \begin{lstlisting}[caption=Cyclic Encoder, style=Code-Matlab, label=lst:refID]
  % cyclicEncoding is a function that encodes a message vector into systematic code given the following parameters
@@ -65,7 +64,7 @@ The Meggitt decoder is able to decode an input message, $r(X)$, which may contai
 If $r(X)$ contains 3 error it the decoder should be able to detect error but not able to correct it.
 
 When calling the Meggitt decoder is start with calculate the error pattern as in section \ref{sec:MeggittDedocerMaterial} matrix \ref{lst:ErrorPattern} and finding the corresponding syndromes matrix \ref{lst:syndromeErrorPattern}.
-In Matlab this is done with the function in \codeTitle \ref{lst:ErrorPatternCreate} \fxnote{tjek at referencer er ok i main fil, har oplevet problemer}
+In Matlab this is done with the function in \codeTitle \ref{lst:ErrorPatternCreate}
 
 \begin{lstlisting}[caption=Error pattern creation, style=Code-Matlab, label=lst:ErrorPatternCreate]
  function syndromes_errorpattern = generateErrorPattern(g,n,k)
@@ -151,10 +150,39 @@ This MatLab code is shown in \codeTitle \ref{lst:DecodeReturn}.
 \subsection{Implementation of Main Function}
 The main function generates a message vector, encodes it into a code vector, transmits it and hereby introduces errors in the code vector, and finally decodes the code vector using Meggitt decoding.
 
-\noindent The main function makes use of the generic cyclic encoder section \ref{sec:ImplementEncoder} and the Meggitt decoder section \ref{sec:ImplementMeggittDecoder}. It is possible to decide how many errors, $t$, should be introduced during transmission, as well as it is possible to manually introduce the error location(s). The errors information send as parameters are handled by the code in \codeTitle \ref{lst:errorHandling}.
+The main function makes use of the implementations of the generic cyclic encoder and the Meggitt decoder described in sections \ref{sec:ImplementEncoder} and \ref{sec:ImplementMeggittDecoder}. 
+When using the main function it is possible to decide how many errors, $t$, should be introduced during transmission, as well as it is possible to manually introduce the error location(s).
 
-\begin{lstlisting}[caption=Error handling, style=Code-Matlab, label=lst:errorHandling]
- if(nargin < 1)  % no input parameters
+Initially the code length, the message length and the generator polynomial are set. A message vector is generated and encoded into a code vector by the cyclic encoder. This is shown in \codeTitle \ref{lst:GenerateVector}. 
+
+\begin{lstlisting}[caption=Generating and Encoding a Vector, style=Code-Matlab, label=lst:GenerateVector]
+ % Set the code length, message length and the generator polynomial
+ n = 15;
+ k = 7;
+ g = [1 0 0 0 1 0 1 1 1];   % g(x) = 1+X^4+X^6+X^7+X^8
+
+ % Generate a message vector by using random numbers in GF(2)
+ m = mod(randi(2,1,k),2);
+
+ % Encode the message vector by the cyclic code encoder function
+ c = cyclicEncoding(g,m,n,k);
+\end{lstlisting}
+
+Secondly, one or more errors are introduced to the code vector depending on the arguments received by the main function - if no specific number of errors have been stated two errors will be introduced. 
+The error locations used will be according to the arguments received by the main function - if no specific error locations have been stated random error location(s) will be generated. 
+The code vector is put into the received vector and the bits at the error location(s) in the received vector are flipped.
+
+Finally, the received vector is decoded by the Meggitt decoder and it is verified whether the decoded vector is equal to the code vector. The result of whether the decoding was successfull or not is printed.
+
+The error handling, decoding and the verification of the decoding is shown in \codeTitle \ref{lst:errorHandling}.
+
+\begin{lstlisting}[caption=Error Handling and Decoding, style=Code-Matlab, label=lst:errorHandling]
+ % Transmit the code vector through an artificial communication channel, i.e. introduce at least one error to the code vector:
+
+ % If the number of errors stated to be introduced is zero, introduce 2 errors
+ % If no error location has been stated, generate random error locations
+ % State the error locations in a sorted array
+ if(nargin < 1)  % no input parameter stating number of  errors
      t = 2;
      errorlocation = sort(randi(n,1,t));
  elseif(nargin > 0)
@@ -165,30 +193,28 @@ The main function generates a message vector, encodes it into a code vector, tra
          errorlocation = sort(errorloc);
      end
  end
-\end{lstlisting}
 
-\noindent Initially the code length, the message length and the generator polynomial are set. A message vector is generated and by the cyclic encoder encoded into a code vector. 
-
-\noindent Secondly, the number of errors to be introduced are stated and random error location(s) are generated. The code vector is put into the received vector and the bits at the error location(s) in the received vector are flipped. This is shown in \codeTitle \ref{lst:GenerateVector}
-
-\begin{lstlisting}[caption=Generating vector, style=Code-Matlab, label=lst:GenerateVector]
- % Generate a message vector by using random numbers in GF(2))
- m = mod(randi(2,1,k),2);
-
- % Encode the message vector by the cyclic code encoder function
- c = cyclicEncoding(g,m,n,k);
-
+ % If there are two or more errors and they happen to be in the same location then generate two new error locations
  while(t > 2 && length(unique(errorlocation)) ~= t)
      errorlocation = sort(randi(n,1,t));
      disp('Errorlocation was recalculated!');
  end
+
+ % Put the code vector c into the received vector r
  r = c;
 
- % Flip bit at generated error location i the received vector.
- % Add 1 and modulo 2 for binary addition
+ % Introduce errors at the generated error location(s) i the received vector
+ % by adding 1 and modulo 2 for binary addition (flipping the bits)
  r(errorlocation) = mod(c(errorlocation)+1,2);
+
+ % Decode the received vector by the Meggitt decoder
+ [e, r_c, tag] = meggitt_decoder(r, g, n, k);
+
+ % Print whether the decoding was successfull 
+ if(isequal(c, r_c) == 0)
+     disp('The codeword was not decoded correct');
+ else
+     disp('The codeword was successfully decoded');
+ end
 \end{lstlisting}
-
-\noindent After calling the Meggit decoder the main print out the different result in the commander prompt and returning the test whether the send message is equal with the decoded message.
-
 \end{document}
