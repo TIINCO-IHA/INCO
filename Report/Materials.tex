@@ -231,4 +231,12 @@ shift_8: \quad input = 1 \quad 00010111 \quad \Rightarrow \quad 00000000
 \end{eqnarray*}
 After 7 shift 7 the syndrome match the error pattern for one error at the last bit.
 After the 8'th bit the syndrome becomes a all zero vector, which indicates that there is no more errors in the buffer.
+
+The only error that is interesting is the last error, therefore when correcting 1 error only the error pattern for error in the rightmost symbol is used.
+In our example the error pattern will be $e(X) = [000000000000001]$.
+When introducing 2 errors correcting the error pattern is extended to the one shown in list: (INDÆST LINK HER MAIKEN!).
+Even though the code is looking for 2 error it is still only errors on the rightmost bit in the buffer that are of interest.
+Therefore the error pattern will contain all possible 2 errors where the one is fixed on the to the right.
+To find the corresponding syndrome error pattern matching a specific error pattern the error pattern is divided with the general polynomial.
+This is done for all the interesting error patterns and the syndromes used for matching in the error pattern detection circuit.
 \end{document}
