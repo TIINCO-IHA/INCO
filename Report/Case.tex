@@ -65,7 +65,7 @@ The Meggitt decoder is able to decode an input message, $r(X)$, which may contai
 If $r(X)$ contains 3 error it the decoder should be able to detect error but not able to correct it.
 
 When calling the Meggitt decoder is start with calculate the error pattern as in section \ref{sec:MeggittDedocerMaterial} matrix \ref{lst:ErrorPattern} and finding the corresponding syndromes matrix \ref{lst:syndromeErrorPattern}.
-In Matlab this is done with the function in \codeTitle \ref{lst:ErrorPatternCreate}
+In Matlab this is done with the function in \codeTitle \ref{lst:ErrorPatternCreate} \fxnote{tjek at referencer er ok i main fil, har oplevet problemer}
 
 \begin{lstlisting}[caption=Error pattern creation, style=Code-Matlab, label=lst:ErrorPatternCreate]
  function syndromes_errorpattern = generateErrorPattern(g,n,k)

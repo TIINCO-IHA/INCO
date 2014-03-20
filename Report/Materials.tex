@@ -4,11 +4,14 @@
 \section{Methods and Materials}
 Information theory concerns analyzation of the communication between a transmitter and a receiver through an unreliable channel. This analyzation consists of analyzing the information sources as well as analyzing the relationship between the information and the unreliable transmission channel. 
 
-Coding is an information theory technique used for optimizing the transmission and making the most efficient use of the channel. By using coding it is possible to have an error-free transmission through a noisy or unreliable channel as long as the transmission rate does not exceed the channel capacity. (Channel capacity is the maximum transmission rate over the given channel for reliable transmission). This was predicted by Shannon in his coding (channel capacity) theorem, which states that: 
+Coding is an information theory technique used for optimizing the transmission and making the most efficient use of the channel.
+By using coding it is possible to have an error-free transmission precess through a noisy or unreliable channel as long as the transmission rate does not exceed the channel capacity.
+(Channel capacity is the maximum transmission rate over the given channel for reliable transmission).
+This was predicted by Shannon in his coding (channel capacity) theorem, which states that: 
 
  \begin{quotation} \noindent If the information rate of a given source does not exceed the capacity of a given channel, then there exists a coding technique that makes possible transmission through this unreliable channel with an arbitrarily low error rate. \end{quotation}
  
-The coding technique used for achieving error-free transmission is error-correction coding. It is executed by the transmitter systematicly adding redundancy to the message (encoding) before transmission. This redundancy is used by the receiver to recover the message information after transmission (decoding). 
+The coding technique used for achieving error-free transmission precess is error-correction coding. It is executed by the transmitter systematicly adding redundancy to the message (encoding) before transmission. This redundancy is used by the receiver to recover the message information after transmission (decoding). 
 
 This section describes the theory for the encoding and Meggitt decoding of a cyclic code. 
 Both encoding and decoding is explained with concrete examples which are also testable with the enclosed \textsc{Matlab} scripts. 
@@ -21,41 +24,38 @@ When the codeword is in systematic form the codeword consists of the ($n - k$) p
 
 Encoding a message vector into a linear cyclic code, $C_{cyc}(n,k)$, in systematic form can be achieved as follows:
 
-First the message polynomial (in the form of $m(X) = m_{0} + m_{1}X+...+m_{k-1}X^{k-1}$) should be converted into a vector of the length $n$. 
+\begin{itemize}
+\item First the message polynomial (in the form of $m(X) = m_{0} + m_{1}X+...+m_{k-1}X^{k-1}$) should be converted into a vector of the length $n$. 
 This is attained by multiplying the message vector by $X^{n-k}$, which results in a shift of the message $n-k$ to the right and forms the right-shifted message polynomial $X^{n-k}m(X)$.
 
-Secondly, the right-shifted message polynomial should be divided by a generator polynomial, $g(X)$, fitting the conditions for being a generator polynomial of a linear cyclic code. 
+\item Secondly, the right-shifted message polynomial should be divided by a generator polynomial, $g(X)$, fitting the conditions for being a generator polynomial of a linear cyclic code. 
 The result of this division is a remainder polynomial (redundancy polynomial).
 
-Finally, the code polynomial in systematic form can be obtained by adding the right-shifted message polynomial and the remainder polynomial: 
+\item Finally, the code polynomial in systematic form can be obtained by adding the right-shifted message polynomial and the remainder polynomial: 
 \begin{equation}
 c(X) = X^{n-k}m(X)+p(X)
 \label{eq:code polynomail formular}
 \end{equation}
-
+\end{itemize}
 The following equations describe the relationships between the right-shifted message polynomial, $X^{n-k}m(X)$, the factor, $q(X)$, the generator polynomial, $g(X)$, and the remainder polynomial, $p(X)$.  
 
-\begin{equation}
-X^{n-k}m(X) = q(X)g(X)+p(X)
-\end{equation}
-
-$\Leftrightarrow$
-
-\begin{equation}
-X^{n-k}m(X)+p(X) = q(X)g(X)
+\begin{eqnarray}
+X^{n-k}m(X) = q(X)g(X)+p(X)\\
+\Updownarrow \nonumber \\
 \label{eq:encoding}
-\end{equation}
+X^{n-k}m(X)+p(X) = q(X)g(X)
+\end{eqnarray}
 
 \subsubsection{Encoding Example}
 \noindent A concrete example with the generator polynomial $g(X)=1+X^4+X^6+X^7+X^8$ is used to encode the following message polynomial:
 $m(X)=1+X^2+X^4+X^6$, corresponding to $m=[1010101]$. The code is a cyclic code, $C_{cyc}(15,7)$.
 
-First the message is right shifted $n-k$ times.
+\noindent First the message is right shifted $n-k$ times.
 \begin{equation}
 X^{15-7}m(X) = X^8+X^{10}+X^{12}+X^{14}
 \end{equation}
 
-Find $p(X)$ by taking the remainder from $X^{n-k}m(x)$ divided by $g(X)$.
+\noindent Find $p(X)$ by taking the remainder from $X^{n-k}m(x)$ divided by $g(X)$.
 
 \[
 \renewcommand\arraystretch{1.2}
@@ -81,14 +81,14 @@ Find $p(X)$ by taking the remainder from $X^{n-k}m(x)$ divided by $g(X)$.
 \end{array}
 \]
 
-Now $c(X)$ can be calculated:
+\noindent Now $c(X)$ can be calculated:
 \begin{align}
 c(X) &= X^8m(X)+p(X)\\ 
 	&= 1 + X^2 + X^5 + X^6 + X^7 + X^8 + X^{10}+ X^{12} + X^{14} \\
 c &= [1 0 1 0 0 1 1 1 1 0 1 0 1 0 1]
 \end{align}
 
-It is easily seen that the encoded vector is in systematic form, hence the message vector corresponds to the last 7 bits.
+\noindent It is easily seen that the encoded vector is in systematic form, hence the message vector corresponds to the last 7 bits.
 
 \subsection{Decoding}
 In general when decoding a received vector, $ r(X) $, the syndrome vector, $ S(X) $, is needed to find out if any errors have happen.
@@ -156,23 +156,22 @@ The Meggitt decoder are shown on Figure \ref{fig:Meggitt_decoder}. It consist of
 \label{fig:Meggitt_decoder}
 \end{figure}
 
-Figure \ref{fig:Meggitt_decoder_example} shows in more details how the syndrome register could be build together with the error pattern detection circuit.
+\noindent Figure \ref{fig:Meggitt_decoder_example} shows in more details how the syndrome register could be build together with the error pattern detection circuit.
 The feedback in the syndrome register is depending on the general polynomial.
 The number of bits in the syndrome is equal to the highest degree in g(X).
 The non zero places in the general vector will get the feedback.
-In this example the generator polynomial is $1+X+X^3$.
-Therefore there will be feedback before 1 and X and the feedback is given by $X^3$.
 The generator polynomial used in this project is: $g(X)=1+X^4+X^6+X^7+X^8$.
-The feedback in the syndrome register will therefore happen before memory block 1, 5, 7 and 8. \fxnote{\textbf{See Figure \dots}}
+The feedback in the syndrome register will therefore happen before memory block 1, 5, 7 and 8. \fxnote{\textbf{Figrue mangler en streng som skal forbinde error pattern \dots}}
+
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.7\linewidth]{./Picture/Meggitt_decoder_example}
-\caption[Meggit Decoder example]{Meggitt decoder details}
+\includegraphics[width=0.7\linewidth]{./Picture/MeggittCircuit}
+\caption[Meggit Decoder example]{Meggitt decoder details1}
 \label{fig:Meggitt_decoder_example}
 \end{figure}
 
-The Meggitt decoder contains of 5 steps:
+\noindent The Meggitt decoder contains of 5 steps:
 \begin{enumerate}
 \item The received vector is shifted into the buffer register and syndrome register.
 At this point the feedback from the error pattern circuit is not used.
