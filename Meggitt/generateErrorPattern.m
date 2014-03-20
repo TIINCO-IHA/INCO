@@ -1,8 +1,5 @@
-function syndromes_errorpattern = generateErrorPattern()
+function syndromes_errorpattern = generateErrorPattern(g,n,k)
 % generate syndrome error pattern
-n = 15;
-k = 7;
-g = [1 0 0 0 1 0 1 1 1];
 
 errorpattern = fliplr(eye(n));
 errorpattern(:,n) = 1;
