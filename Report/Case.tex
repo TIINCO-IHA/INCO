@@ -58,6 +58,94 @@ The implemented encoder is a Matlab function, $cyclicEncoder$. The encoder is ab
  c = mod(shifted_m+p,2);
 \end{lstlisting}
 
+\subsection{Implementation of Meggitt decoder}
+The Meggitt decoder is able to decode an input message, $r(X)$, which may contain 1 or 2 error and return the correct output vector, $v(X)$.
+If $r(X)$ contains 3 error it the decoder should be able to detect error but not able to correct it.
+
+When calling the meggitt decoder is start with calculate the error pattern as in \fxnote{HENVISNING meggitt decoder slutning, tabel} and finding the corresponding syndromes.
+In Matlab this is done with the function in \codeTitle \ref{lst:ErrorPatternCreate}
+
+\begin{lstlisting}[caption=Error pattern creation, style=Code-Matlab, label=lst:ErrorPatternCreate]
+ function syndromes_errorpattern = generateErrorPattern(g,n,k)
+ % generate syndrome error pattern
+ 
+ errorpattern = fliplr(eye(n));
+ errorpattern(:,n) = 1;
+ syndromes_errorpattern = zeros(n,n-k);
+ 
+ for i = 1:n
+     [q, s] = gfdeconv(errorpattern(i,:), g, 2);
+     if(length(s) ~= n-k)
+         syndromes_errorpattern(i,:) = [s zeros(1,n-k-length(s))];
+     else
+         syndromes_errorpattern(i,:) = s;
+     end
+ end
+\end{lstlisting}
+
+The initiation of the syndrome register is happening next.
+As it was shown in \fxnote{HENVISNING TIL AFSNIT MEGGITT DECODER} the initialization of the syndrome register is the same at making a polynomial division of $S(X)$ and $g(X)$.
+With this knowledge the function in MatLab is as shown in \codeTitle \ref{lst:SyndromeInit}.
+If the syndrome vector is less than $k$, when it don't have any bit in the high end, the syndrome is filled up with zeros so they all have a length of $k$.
+
+\begin{lstlisting}[caption=Syndrome initialization, style=Code-Matlab, label=lst:SyndromeInit]
+ function iSyndrome = init_Syndrome(r,g,n,k)
+ % function iSyndrome = init_Syndrome(r,g,n,k)
+ 
+ [q, iSyndrome] = gfdeconv(r,g,2);
+ 
+ if(length(iSyndrome) ~= n-k)
+     iSyndrome = [iSyndrome zeros(1,n-k-length(iSyndrome))];
+ end
+\end{lstlisting}
+
+The Meggitt decoder is now ready to decode which is happening in \codeTitle \ref{lst:ErrorDetection}.
+Start to check for whether the syndrome has an error or not, by checking the syndrome with all the syndromes in the $syndrome\_errorpattern$.
+If it has an error the end bit in the buffer, here $r$, is corrected before it is shifted.
+After the shift a new syndrome is calculated and make sure the length is $k$.
+
+\begin{lstlisting}[caption=Error detection, style=Code-Matlab, label=lst:ErrorDetection]
+ for i = 1:n
+     % Test of syndrome is equal to one of the error syndromes
+     for b = 1:n
+         % Check if the calculated syndrome is equal to one of the rows in syndrome
+         % table
+         if(isequal(si, syndromes_errorpattern(b,:))==1)
+             % correct bit, if error happened
+             error_vec(i) = 1;
+             r(end) = mod(r(end)+1,2);
+         end
+     end
+     
+     % Right shift the received vector 1 bit
+     ri = circshift(r, [1 1]);
+     % Calculate new syndrome register
+     [q, si] = gfdeconv(ri,g,2);
+     % Set r to ri (make the shift in memory too)
+     r = ri;
+     % zeropad si to compare with the syndrome table
+     if(length(si) ~= n-k)
+         si = [si zeros(1,n-k-length(si))];
+     end
+ end
+\end{lstlisting}
+
+After the decoding it sum up all information to create the tag and return the error vector and the code vector.
+This MatLab code is shown in \codeTitle \ref{lst:DecodeReturn}.
+
+\begin{lstlisting}[caption=Meggitt decode return, style=Code-Matlab, label=lst:DecodeReturn]
+ if sum(si)~=0 && sum(error_vec) > 2
+     tag = 'The received vector contains more than 2 errors';
+ elseif sum(si)==0 && sum(error_vec) <= 2 && sum(error_vec) >= 1
+     tag = ['The decoder has corrected ', num2str(sum(error_vec)), ' error(s)'];
+ else
+     tag = 'The received vector contains more than 2 errors';
+ end
+ 
+ error_vec = fliplr(error_vec);
+ code_vec = r;
+\end{lstlisting}
+
 \subsection{Implementation of Main Function}
 The main function, $miniproject$, can correct up to two errors where the errors can be specified in numbers and location.
 
@@ -130,5 +218,7 @@ fprintf(t_out,c_t,r_t,e_t,rc_t,tag);
 save variables
 test = isequal(c, r_c);
 \end{lstlisting}
+
+
 
 \end{document}
