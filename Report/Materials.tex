@@ -2,20 +2,24 @@
 
 \begin{document}
 \section{Methods and Materials}
-Information theory concerns analyzation of the communication between a transmitter and a receiver through an unreliable channel. This analyzation consists of analyzing the information sources as well as analyzing the relationship between the information and the unreliable transmission channel. 
+Information theory concerns analyzation of the communication between a transmitter and a receiver through an unreliable channel. 
+This analyzation consists of analyzing the information sources as well as analyzing the relationship between the information and the unreliable transmission channel. 
 
 Coding is an information theory technique used for optimizing the transmission and making the most efficient use of the channel.
 By using coding it is possible to have an error-free transmission precess through a noisy or unreliable channel as long as the transmission rate does not exceed the channel capacity.
 (Channel capacity is the maximum transmission rate over the given channel for reliable transmission).
 This was predicted by Shannon in his coding (channel capacity) theorem, which states that: 
 
- \begin{quotation} \noindent If the information rate of a given source does not exceed the capacity of a given channel, then there exists a coding technique that makes possible transmission through this unreliable channel with an arbitrarily low error rate. \end{quotation}
+\begin{fquote}[Claude Shannon][A mathematical theory of communication][1948]
+If the information rate of a given source does not exceed the capacity of a given channel, then there exists a coding technique that makes possible transmission through this unreliable channel with an arbitrarily low error rate.
+\end{fquote}
+ 
  
 The coding technique used for achieving error-free transmission precess is error-correction coding. It is executed by the transmitter systematicly adding redundancy to the message (encoding) before transmission. This redundancy is used by the receiver to recover the message information after transmission (decoding). 
 
 This section describes the theory for the encoding and Meggitt decoding of a cyclic code. 
 Both encoding and decoding is explained with concrete examples which are also testable with the enclosed \textsc{Matlab} scripts. 
-Knowledge is obtained through TI-INCO course lessons, the ``Essentials of Error-Control Coding'' text book by Jorge Casti\~{n}eira Moreira and Patrick Guy Farrell and through delivered material about decoding of cyclic codes (Chapter 5.5 from the "Error Control Coding" text book by Shu Lin and Daniel J. Costello). 
+Knowledge is obtained through TI-INCO course lessons, the text book \cite{book}  and through delivered material about decoding of cyclic codes \cite{handout}. 
 
 \subsection{Encoding}
 Error-control coding is a technique that adds redundancy to the messages. The encoder takes the message, that is a block of $k$ binary digits (bits), and generates a codeword of $n$ bits ($n > k$), i.e. $n - k$ redundancy/parity check bits are added. The assignment of the codeword is a bijective function that adds the redundancy and allows us the decoding of each message. 
@@ -121,7 +125,7 @@ It is known that
 r(X) = q(X) \cdot g(x) \oplus S(X)
 \end{equation}
 where $q(X)$ is the quotient.
-When encoding $c(X)$ and combining equation \ref{eq:code polynomail formular} and \ref{eq:encoding} it is seen that $q(X) \cdot g(X) = c(X)$.
+When encoding $c(X)$ and combining equation \ref{eq:code polynomial formular} and \ref{eq:encoding} it is seen that $q(X) \cdot g(X) = c(X)$.
 It is also known that $ S(X) $ is the error therefore $S(X) = e(X)$.
 With this knowledge equation \ref{eq:received_vectore_long_gen} can be changed to:
 \begin{equation}
@@ -134,12 +138,17 @@ c(X) = r(X) \oplus e(X)
 \end{equation}
 This means that when the error has been located it can be removed by multiplying it to $ r(X) $.
 
-\subsubsection{Meggitt decoding} 
+
+
+
+\subsubsection{Meggitt decoding}\label{sec:Meggitt}
 The Meggitt decoder is used to decode any cyclic code.
 The error patterns can be specified by a decoding table which is made as a lookup table.
 However this procedure is complex and the decoding circuit tends to grow exponentially with the code length and the number of errors which can be corrected.
 The Meggitt decoders are useful to correct up to 3 random errors.
-The Meggitt decoder are shown on Figure \ref{fig:Meggitt_decoder}. It consist of 3 main component:
+The Meggitt decoder are shown on Figure \ref{fig:Meggitt_decoder}. 
+It consist of 3 main component:
+
 \begin{itemize}
 \item Buffer register
 \subitem Is buffering the received vector
@@ -161,7 +170,7 @@ The feedback in the syndrome register is depending on the general polynomial.
 The number of bits in the syndrome is equal to the highest degree in g(X).
 The non zero places in the general vector will get the feedback.
 The generator polynomial used in this project is: $g(X)=1+X^4+X^6+X^7+X^8$.
-The feedback in the syndrome register will therefore happen before memory block 1, 5, 7 and 8. \fxnote{\textbf{Figrue mangler en streng som skal forbinde error pattern \dots}}
+The feedback in the syndrome register will therefore happen before memory block 1, 5, 7 and 8. 
 
 
 \begin{figure}[htbp]

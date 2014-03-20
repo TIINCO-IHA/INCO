@@ -27,6 +27,15 @@ The conditions given for the case study are:
 All three functions are described in detail in the following. 
 
 
+
+
+
+
+
+
+
+
+
 \subsection{Implementation of Encoder}
 \label{sec:ImplementEncoder}
 The implemented encoder is a Matlab function, $cyclicEncoder$. The encoder is able to encode a message vector into systematic code by receiving a generator polynomial $g$ and a message vector $m$. In addition the encoder has been made generic so that it also is possible to state the code length $n$ and the message length $k$ - if nothing is stated, the default value of n is 15 and k is 7. The output of the function is a code vector, $c$. 
@@ -58,6 +67,12 @@ Finally, adding the right-shifted message polynomial and the remainder polynomia
  c = mod(shifted_m+p,2);
 \end{lstlisting}
 
+
+
+
+
+
+
 \subsection{Implementation of Meggitt decoder}
 \label{sec:ImplementMeggittDecoder}
 The Meggitt decoder is able to decode an input message, $r(X)$, which may contain 1 or 2 error and return the correct output vector, $v(X)$.
@@ -85,7 +100,7 @@ In Matlab this is done with the function in \codeTitle \ref{lst:ErrorPatternCrea
 \end{lstlisting}
 
 The initiation of the syndrome register is happening next.
-As it was shown in \fxnote{HENVISNING TIL AFSNIT MEGGITT DECODER} the initialization of the syndrome register is the same at making a polynomial division of $S(X)$ and $g(X)$.
+As it was shown in section \ref{sec:Meggitt} the initialization of the syndrome register is the same at making a polynomial division of $S(X)$ and $g(X)$.
 With this knowledge the function in MatLab is as shown in \codeTitle \ref{lst:SyndromeInit}.
 If the syndrome vector is less than $k$, when it don't have any bit in the high end, the syndrome is filled up with zeros so they all have a length of $k$.
 
@@ -146,6 +161,13 @@ This MatLab code is shown in \codeTitle \ref{lst:DecodeReturn}.
  error_vec = fliplr(error_vec);
  code_vec = r;
 \end{lstlisting}
+
+
+
+
+
+
+
 
 \subsection{Implementation of Main Function}
 The main function generates a message vector, encodes it into a code vector, transmits it and hereby introduces errors in the code vector, and finally decodes the code vector using Meggitt decoding.
