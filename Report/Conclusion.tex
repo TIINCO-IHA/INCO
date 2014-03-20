@@ -10,9 +10,10 @@ The Meggitt decoder should be capable of correcting 2 or less errors and able to
 The project has resulted in a cyclic code encoder which is able to create a codeword with 3 or less errors as well as a Meggitt decoder which can correct 2 or less errors.
 The Meggitt decoder is able to detect most of the errors in codewords with 3 errors, but some times it corrects them as 2 error codewords.
 As explained in the result, this could be due to the fact that the codeword is the same as another codeword with only 2 errors. Because of this the Meggitt decoder does not know which codeword is the original and will handle it as the codeword with less errors.  
-
+\\
+\\
 Overall the project has been successful.
-The codes implemented in Matlab is able to do what is required and the members have learned a lot about encoding and Meggitt decoding.
+The codes implemented in \texttt{Matlab} is able to do what is required and the members have learned a lot about encoding and Meggitt decoding.
 It has been hard to learn the principles of the Meggitt decoder, but when this was all clear, it was easy to make the code and test it as well.
 The hard part was to understand the character of the feedback in the syndrome register in the Meggitt decoder concerning which block register should receive feedback.
 The examples in this report about decoding was initially implemented and extended to a 15 length codeword based on the examples in the hand out material about decoding of cyclic codes.
