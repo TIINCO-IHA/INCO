@@ -5,16 +5,27 @@ function test = miniproject(t_errors, errorloc)
 %                 scalars between 1-15 corresponding to bit location 1-15 (degree 0-14).
 % test:           Returns one if the decoded message, c, is equal to the input
 %                 message, r.
+% This code makes use of the cyclic encoder and the Meggitt decoder
 addpath('../Encoder');
 addpath('../Meggitt');
 
-% Generate message vector
+% Set the code length, message length and the generator polynomial
 n = 15;
 k = 7;
-% g(x) = 1+X^4+X^6+X^7+X^8
-g = [1 0 0 0 1 0 1 1 1];
+g = [1 0 0 0 1 0 1 1 1];   % g(x) = 1+X^4+X^6+X^7+X^8
 
-if(nargin < 1)  % no input parameters
+% Generate a message vector by using random numbers in GF(2)
+m = mod(randi(2,1,k),2);
+
+% Encode the message vector by the cyclic code encoder function
+c = cyclicEncoding(g,m,n,k);
+
+% Transmit the code vector through an artificial communication channel,
+% i.e. introduce one or two errors to the code vector:
+
+% If the number of errors stated to be introduced is zero, introduce 2 errors. 
+% If no error location has been stated, generate random error locations and state them in a sorted array
+if(nargin < 1)  % no input parameter stating number of errors
     t = 2;
     errorlocation = sort(randi(n,1,t));
 elseif(nargin > 0)
@@ -25,12 +36,6 @@ elseif(nargin > 0)
         errorlocation = sort(errorloc);
     end
 end
-
-% generate random numbers in GF(2)
-m = mod(randi(2,1,k),2);
-
-% Encode message vector by the ciclic code encoder
-c = cyclicEncoding(g,m,n,k);
 
 while(t > 2 && length(unique(errorlocation)) ~= t)
     errorlocation = sort(randi(n,1,t));
@@ -43,7 +48,6 @@ r = c;
 r(errorlocation) = mod(c(errorlocation)+1,2);
 
 % Decode the received vector by the meggitt decoder
-
 [e, r_c, tag] = meggitt_decoder(r, g, n, k);
 
 if(isequal(c, r_c) == 0)
