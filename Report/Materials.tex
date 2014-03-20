@@ -210,7 +210,7 @@ shift_{15}: \quad input = 0 \quad 000{\color{cyan}0}0{\color{cyan}10}0 \quad \Ri
 \end{eqnarray*}
 After shifted $r(X)$ into the syndrome register the syndrome has a 1 on the 7'th bit, which is the syndrome pattern matching the error pattern for $X^6$.
 This bit was flipped in the received vector to introduce an error.
-Another way to find the syndrome matching $ r(X) $ is to make the polynomial division as in Equation \ref{syndrom formular}. \fxnote{SKAL DETTE BEVISES?}
+Another way to find the syndrome matching $ r(X) $ is to make the polynomial division as in Equation \ref{syndrom formular}.
 
 The $r(X)$ in the buffer match the $S(X)$ in the syndrome register, but what happens with $S(X)$ when the $r(X)$ is shifted in the buffer?
 When $r(X)$ is cyclic right shifted it becomes $r^{(1)}(X)$ and has a cosponsoring $S^{(1)}(X)$.
