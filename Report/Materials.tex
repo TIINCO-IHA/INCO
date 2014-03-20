@@ -150,7 +150,7 @@ This means that when the error has been located it can be removed by adding it t
 
 
 
-\subsubsection{Meggitt decoding}\label{sec:Meggitt}
+\subsubsection{Meggitt Decoding}\label{sec:Meggitt}
 The Meggitt decoder can be used to decode any cyclic code.
 The error patterns can be specified by a decoding table which is made as a lookup table.
 However, this procedure is complex and the decoding circuit tends to grow exponentially with the code length and the number of errors which can be corrected.
@@ -159,7 +159,7 @@ Meggitt decoders are useful to correct up to 3 random errors.
 A general decoder is shown in Figure \ref{fig:Meggitt_decoder}. 
 It consists of 3 main components:
 
-\begin{itemize} \itemsep0pt \parskip0pt \parsep0pt
+\begin{itemize} \itemsep1pt \parskip0pt \parsep0pt
 \item Buffer register - contains the received vector
 \item Syndrome register - contains the specific syndrome for the buffer
 \item Error pattern detection circuit - contains the lookup table with all the error patterns
@@ -173,9 +173,11 @@ It consists of 3 main components:
 \end{figure}
 
 Figure \ref{fig:Meggitt_decoder_example} shows more detailed how the syndrome register could be build in a Meggitt decoding circuit.
+
 The feedback to the syndrome register depends on the generator polynomial, $g(X)$.
 The number of bits in the syndrome is equal to the highest degree in $g(X)$.
 The non zero places in the generator polynomial will receive the feedback.
+
 The generator polynomial used in this example is: $g(X)=1+X^4+X^6+X^7+X^8$, so the feedback in the syndrome register will enter before memory block 1, 5, 7 and 8. 
 
 
@@ -185,7 +187,6 @@ The generator polynomial used in this example is: $g(X)=1+X^4+X^6+X^7+X^8$, so t
 \caption[Meggit Decoder example]{Meggitt decoding detailed circuit}
 \label{fig:Meggitt_decoder_example}
 \end{figure}
-
 
 The Meggitt decoding contains of 5 steps:
 \begin{enumerate}
@@ -199,7 +200,7 @@ If the syndrome does not match any error pattern, the output will be 0.
 \item The received vector is decoded symbol by symbol until the whole received vector has been read out of the buffer register.
 \end{enumerate}
 
-\subsubsection{Meggitt decode example}
+\subsubsection{Example: Meggitt Decoding}
 \label{sec:MeggittDedocerMaterial}
 In this example the codeword $ c = [0 1 1 1 1 0 0 0 1 0 0 1 1 0 1] $ is used.
 An error is made on bit 7, i.e. $X^6$ is flipped, so the received vector is: $ r = [0 1 1 1 1 0 {\color{red}1} 0 1 0 0 1 1 0 1] $.
@@ -233,7 +234,7 @@ shift_{15}: \quad input = 0 \quad 000{\color{cyan}0}0{\color{cyan}10}0 \quad \Ri
 
 After shifting $r(X)$ into the syndrome register the syndrome has a 1 on the 7'th bit, which is the syndrome pattern matching the error pattern for $X^6$.
 This bit was flipped in the received vector to introduce an error.
-Another way to find the syndrome matching $ r(X) $ is to make the polynomial division as stated in Equation \ref{syndrom formular}.
+Another way to find the syndrome matching $ r(X) $ is to make the polynomial division as stated in equation \ref{syndrom formular}.
 
 The $r(X)$ in the buffer matches the $S(X)$ in the syndrome register, but what happens with $S(X)$ when $r(X)$ is shifted in the buffer?
 When $r(X)$ is cyclic right shifted it becomes $r^{(1)}(X)$ and has a corresponding $S^{(1)}(X)$.

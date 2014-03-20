@@ -5,7 +5,7 @@
 This project has implemented the function \texttt{miniproject(t\_errors, errorloc)} in Matlab which runs the cyclic encoder and Meggitt decoder.
 The function will return 1 if the messages has been decoded into a correct code word, otherwise it will return 0.
 It takes the parameters \texttt{t\_errors}, which is the number of errors which should be added to the message, and \texttt{errorloc} which is the location of the errors.
-If \texttt{errorloc} is not used the error location(s) will added randomly, and if \texttt{t\_errors} is not used 2 errors at random locations will be introduced. 
+If \texttt{errorloc} is not used the error location(s) will be added randomly, and if \texttt{t\_errors} is not used 2 errors at random locations will be introduced. 
 
 Some screen dumps form Matlab calling the \texttt{miniproject()} function will be discussed in the following.
 
@@ -16,7 +16,7 @@ Furthermore it shows the different vectors and the tag telling what the Meggitt 
 \begin{figure}[h!]
 \centering
 \includegraphics[width=0.7\linewidth]{./Picture/result-1-errors}
-\caption{Meggitt decode run with one error, no location}
+\caption{Meggitt decoder run with one error, no location}
 \label{fig:result-1-errors}
 \end{figure}
 
@@ -60,7 +60,7 @@ At first this gave some frustration until putting some deeper thoughts into this
 A possible cause to this could be that when introducing 3 errors to a codeword this can result in a codeword with only 2 errors, which the function is able to correct to a valid codeword.
 
 This can be explained as follows:
-The general polynomial has a weight of 5 which give a $d_{min}=5$.
+The general polynomial has a weight of 5 which give a $d_{min}=4$.
 When only introducing 2 or less errors it is sure that the shortest distance is to the correct codeword.
 When introducing 3 or more errors, there is a possibility that it is getting a distance of two to an other codeword.
 In the way the \texttt{miniproject(t\_errors, errorloc)} has been implemented it will always look for the codeword with the shortest distance, which it is why it will reach a valid but wrong codeword.
