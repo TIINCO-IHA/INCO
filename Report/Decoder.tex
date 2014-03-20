@@ -6,7 +6,7 @@
 The Meggitt decoder is able to decode an input message, $r(X)$, which may contain 1 or 2 error and return the correct output vector, $v(X)$.
 If $r(X)$ contains 3 error it the decoder should be able to detect error but not able to correct it.
 
-When calling the meggitt decoder is start with calculate the error pattern as in (HENVISNING meggitt decoder slutning, tabel) and finding the corresponding syndromes.
+When calling the meggitt decoder is start with calculate the error pattern as in \fxnote{HENVISNING meggitt decoder slutning, tabel} and finding the corresponding syndromes.
 In Matlab this is done with the function in \codeTitle \ref{lst:ErrorPatternCreate}
 
 \begin{lstlisting}[caption=Error pattern creation, style=Code-Matlab, label=lst:ErrorPatternCreate]
@@ -28,9 +28,9 @@ In Matlab this is done with the function in \codeTitle \ref{lst:ErrorPatternCrea
 \end{lstlisting}
 
 The initiation of the syndrome register is happening next.
-As it was shown in (HENVISNING TIL AFSNIT MEGGITT DECODER) the initialization of the syndrome register is the same at making a polynomial division of $S(X)$ and $g(X)$.
+As it was shown in \fxnote{HENVISNING TIL AFSNIT MEGGITT DECODER} the initialization of the syndrome register is the same at making a polynomial division of $S(X)$ and $g(X)$.
 With this knowledge the function in MatLab is as shown in \codeTitle \ref{lst:SyndromeInit}.
-If the syndrome vector is less than k, when it don't have any bit in the high end, the syndrome is filled up with zero so they all have a length of k.
+If the syndrome vector is less than $k$, when it don't have any bit in the high end, the syndrome is filled up with zeros so they all have a length of $k$.
 
 \begin{lstlisting}[caption=Syndrome initialization, style=Code-Matlab, label=lst:SyndromeInit]
  function iSyndrome = init_Syndrome(r,g,n,k)
@@ -44,9 +44,9 @@ If the syndrome vector is less than k, when it don't have any bit in the high en
 \end{lstlisting}
 
 The Meggitt decoder is now ready to decode which is happening in \codeTitle \ref{lst:ErrorDetection}.
-Start to check for whether the syndrome has an error or not, by checking the syndrome with all the syndromes in the syndrome\_errorpattern.
-If it has an error the end bit in the buffer, here r, is corrected before it is shifted.
-After the shift a new syndrome is calculated and make sure the length is k.
+Start to check for whether the syndrome has an error or not, by checking the syndrome with all the syndromes in the $syndrome\_errorpattern$.
+If it has an error the end bit in the buffer, here $r$, is corrected before it is shifted.
+After the shift a new syndrome is calculated and make sure the length is $k$.
 
 \begin{lstlisting}[caption=Error detection, style=Code-Matlab, label=lst:ErrorDetection]
  for i = 1:n
