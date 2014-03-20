@@ -50,30 +50,6 @@ In Figure \ref{fig:result-3-errors} it is seen that it is possible to detect the
 %(Giv et input til encoderen --> bliver til)
 
 %(Giv et input til decoderen --> bliver til)
-The Meggitt decoder can be tested with the script in \codeTitle \ref{lst:MeggitTest}.
-The wanted encoder should return $v(x)$ but has an error, $r(x)$, which must be decoded.
-If the value from $isequal$ returns '1' the output is the same as $v(x)$.
 
-\begin{lstlisting}[caption=Meggitt test script, style=Code-Matlab, label=lst:MeggitTest]
-%Meggitt decoder
-clc, clear
-
-%v(x) - wanted value
-v = [1 0 0 1 0 1 1];
-
-%r(x) - v(x) with an error
-r = [1 0 0 1 0 0 1];
-
-res = Meggitt(r)
-
-Equal = isequal(v, res)
-\end{lstlisting}
-
-$res = [1 0 0 1 0 1 1]$
-\\
-\\
-$Equal = 1 $
-(Fejlretning, hvor mange fejl kan vi rette?)\\
-Snak om at ved indføring af 3 fejl er der risiko for at det kan blive til et codeword med 2 fejl hvilket vi er i stand til at rette og derfor vi nogle gange får et valid codeword når vi har indført 3 fejl. Dette skylde at vi har en $d_{min}=5$
 
 \end{document}

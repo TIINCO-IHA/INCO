@@ -2,7 +2,9 @@
 
 \begin{document}
 \section{Materials and Methods}
-This section describes the theory for the encoding and Meggitt decoding of a cyclic code. Both encoding and decoding is explained with concrete examples which are also testable with the enclosed \textsc{Matlab} scripts. Knowledge is obtained through TI-INCO course lessons, the ``Essentials of Error-Control Coding'' text book by Jorge Casti\~{n}eira Moreira and Patrick Guy Farrell and through delivered material about decoding of cyclic codes (chapter 5.5).
+This section describes the theory for the encoding and Meggitt decoding of a cyclic code. 
+Both encoding and decoding is explained with concrete examples which are also testable with the enclosed \textsc{Matlab} scripts. 
+Knowledge is obtained through TI-INCO course lessons, the ``Essentials of Error-Control Coding'' text book by Jorge Casti\~{n}eira Moreira and Patrick Guy Farrell and through delivered material about decoding of cyclic codes (chapter 5.5).\fxnote{Make reference}
 
 \subsection{Encoding}
 %(Matematisk eksempel)
@@ -10,9 +12,11 @@ This section describes the theory for the encoding and Meggitt decoding of a cyc
 
 \noindent Encoding a message vector into a linear cyclic code, $C_{cyc}(n,k)$, in systematic form can be achieved as follows:
 
-\noindent First the message polynomial (in the form of $m(X) = m_{0} + m_{1}X+...+m_{k-1}X^{k-1}$) should be converted into a vector of the length $n$. This is attained by multiplying the message vector by $X^{n-k}$, which results in a shift of the message $n-k$ to the right and forms the right-shifted message polynomial $X^{n-k}m(X)$.
+\noindent First the message polynomial (in the form of $m(X) = m_{0} + m_{1}X+...+m_{k-1}X^{k-1}$) should be converted into a vector of the length $n$. 
+This is attained by multiplying the message vector by $X^{n-k}$, which results in a shift of the message $n-k$ to the right and forms the right-shifted message polynomial $X^{n-k}m(X)$.
 
-\noindent Secondly, the right-shifted message polynomial should be divided by a generator polynomial, $g(X)$, fitting the conditions for being a generator polynomial of a linear cyclic code. The result of this division is a remainder polynomial (redundancy polynomial).
+\noindent Secondly, the right-shifted message polynomial should be divided by a generator polynomial, $g(X)$, fitting the conditions for being a generator polynomial of a linear cyclic code. 
+The result of this division is a remainder polynomial (redundancy polynomial).
 
 \noindent Finally, the code polynomial in systematic form can be obtained by adding the right-shifted message polynomial and the remainder polynomial: 
 \begin{equation}
@@ -26,7 +30,7 @@ c(X) = X^{n-k}m(X)+p(X)
 X^{n-k}m(X) = q(X)g(X)+p(X)
 \end{equation}
 
-$\leftrightarrow$
+$\Leftrightarrow$
 
 \begin{equation}
 X^{n-k}m(X)+p(X) = q(X)g(X)
@@ -70,8 +74,9 @@ X^{15-7}m(X) = X^8+X^{10}+X^{12}+X^{14}
 
 \noindent Now $c(X)$ can be calculated:
 \begin{align}
-c(X) = X^8m(X)+p(X) = 1 + X^2 + X^5 + X^6 + X^7 + X^8 + X^{10}+ X^{12} + X^{14} \\
-c = [1 0 1 0 0 1 1 1 1 0 1 0 1 0 1]
+c(X) &= X^8m(X)+p(X)\\ 
+	&= 1 + X^2 + X^5 + X^6 + X^7 + X^8 + X^{10}+ X^{12} + X^{14} \\
+c &= [1 0 1 0 0 1 1 1 1 0 1 0 1 0 1]
 \end{align}
 
 \noindent It is easily seen that the encoded vector is in systematic form, hence the message vector corresponds to the last 7 bits.
@@ -98,7 +103,7 @@ Every possible error is mapped to a specific syndrome.
 The error capability and the error detection can be found in this way:
 \begin{eqnarray}
 Error \: Detection = d_{min}-1\\
-Error \: Correction = t = \frac{d_{min}-1}{2}
+Error \: Correction = t = \floor*{\frac{d_{min}-1}{2}}
 \end{eqnarray}
 When the error is found it can be corrected.
 It is known that
@@ -135,27 +140,29 @@ The Meggitt decoder are shown on Figure \ref{fig:Meggitt_decoder}. It consist of
 \subitem Containing the lookup table with all the error patterns
 \end{itemize}
 
-\begin{figure}[h!]
+\begin{figure}[H]
 \centering
 \includegraphics[width=0.7\linewidth]{./Picture/Meggitt_decoder}
 \caption[The Meggitt decoder]{Meggitt decoder overview}
 \label{fig:Meggitt_decoder}
 \end{figure}
-Figure \ref{fig:Meggitt_decoder_example} shows a more in details how the syndrome register could be build together with the error pattern detection circuit.
+
+Figure \ref{fig:Meggitt_decoder_example} shows in more details how the syndrome register could be build together with the error pattern detection circuit.
 The feedback in the syndrome register is depending on the general polynomial.
 The number of bits in the syndrome is equal to the highest degree in g(X).
 The non zero places in the general vector will get the feedback.
 In this example the generator polynomial is $1+X+X^3$.
 Therefore there will be feedback before 1 and X and the feedback is given by $X^3$.
 The generator polynomial used in this project is: $g(X)=1+X^4+X^6+X^7+X^8$.
-The feedback in the syndrome register will therefore happen before memory block 1, 5, 7 and 8. \textbf{See Figure XX <------}
+The feedback in the syndrome register will therefore happen before memory block 1, 5, 7 and 8. \fxnote{\textbf{See Figure \dots}}
 
-\begin{figure}[h!]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.7\linewidth]{./Picture/Meggitt_decoder_example}
 \caption[Meggit Decoder example]{Meggitt decoder details}
 \label{fig:Meggitt_decoder_example}
 \end{figure}
+
 The Meggitt decoder contains of 5 steps:
 \begin{enumerate}
 \item The received vector is shifted into the buffer register and syndrome register.
@@ -202,7 +209,7 @@ shift_{15}: \quad input = 0 \quad 000{\color{cyan}0}0{\color{cyan}10}0 \quad \Ri
 \end{eqnarray*}
 After shifted $r(X)$ into the syndrome register the syndrome has a 1 on the 7'th bit, which is the syndrome pattern matching the error pattern for $X^6$.
 This bit was flipped in the received vector to introduce an error.
-An other way to find the syndrome matching $ r(X) $ is to make the polynomial division as in Equation \ref{syndrom formular}. SKAL DETTE BEVISES???????????????????????????????????????????
+Another way to find the syndrome matching $ r(X) $ is to make the polynomial division as in Equation \ref{syndrom formular}. \fxnote{SKAL DETTE BEVISES?}
 
 The $r(X)$ in the buffer match the $S(X)$ in the syndrome register, but what happens with $S(X)$ when the $r(X)$ is shifted in the buffer?
 When $r(X)$ is cyclic right shifted it becomes $r^{(1)}(X)$ and has a cosponsoring $S^{(1)}(X)$.
@@ -229,12 +236,12 @@ shift_6: \quad input = 0 \quad 01011100 \quad \Rightarrow \quad 00101110\\
 shift_7: \quad input = 0 \quad 00101110 \quad \Rightarrow \quad 00010111\\
 shift_8: \quad input = 1 \quad 00010111 \quad \Rightarrow \quad 00000000
 \end{eqnarray*}
-After 7 shift 7 the syndrome match the error pattern for one error at the last bit.
-After the 8'th bit the syndrome becomes a all zero vector, which indicates that there is no more errors in the buffer.
+After shift 7 the syndrome match the error pattern for one error at the last bit.
+After the 8'th bit the syndrome becomes an all zero vector, which indicates that there is no more errors in the buffer.
 
 The only error that is interesting is the last error, therefore when correcting 1 error only the error pattern for error in the rightmost symbol is used.
 In our example the error pattern will be $e(X) = [000000000000001]$.
-When introducing 2 errors correcting the error pattern is extended to the one shown in list: (INDÆST LINK HER MAIKEN!).
+When introducing 2 errors correcting the error pattern is extended to the one shown in list:\fxnote{INDSÆT LINK HER MAIKEN!}.
 
 \begin{equation}
 syndromeErrorPattern = 
