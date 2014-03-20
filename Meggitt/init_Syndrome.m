@@ -1,7 +1,5 @@
 function iSyndrome = init_Syndrome(r,g,n,k)
-% function iSyndrome = init_Syndrome(r,g)
-% 
-% 
+% function iSyndrome = init_Syndrome(r,g,n,k)
 
 [q, iSyndrome] = gfdeconv(r,g,2);
 

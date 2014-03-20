@@ -6,17 +6,74 @@
 The Meggitt decoder is able to decode an input message, $r(X)$, which may contain 1 or 2 error and return the correct output vector, $v(X)$.
 If $r(X)$ contains 3 error it the decoder should be able to detect error but not able to correct it.
 
-When calling the meggitt decoder is start with calculate the error pattern
+When calling the meggitt decoder is start with calculate the error pattern as in (HENVISNING meggitt decoder slutning, tabel) and finding the corresponding syndromes.
+In Matlab this is done with the function in \codeTitle \ref{lst:ErrorPatternCreate}
+
+\begin{lstlisting}[caption=Error pattern creation, style=Code-Matlab, label=lst:ErrorPatternCreate]
+ function syndromes_errorpattern = generateErrorPattern(g,n,k)
+ % generate syndrome error pattern
+ 
+ errorpattern = fliplr(eye(n));
+ errorpattern(:,n) = 1;
+ syndromes_errorpattern = zeros(n,n-k);
+ 
+ for i = 1:n
+     [q, s] = gfdeconv(errorpattern(i,:), g, 2);
+     if(length(s) ~= n-k)
+         syndromes_errorpattern(i,:) = [s zeros(1,n-k-length(s))];
+     else
+         syndromes_errorpattern(i,:) = s;
+     end
+ end
+\end{lstlisting}
+
+The initiation of the syndrome register is happening next.
+As it was shown in (HENVISNING TIL AFSNIT MEGGITT DECODER) the initialization of the syndrome register is the same at making a polynomial division of $S(X)$ and $g(X)$.
+With this knowledge the function in MatLab is as shown in \codeTitle \ref{lst:SyndromeInit}.
+If the syndrome vector is less than k, when it don't have any bit in the high end, the syndrome is filled up with zero so they all have a length of k.
+
+\begin{lstlisting}[caption=Syndrome initialization, style=Code-Matlab, label=lst:SyndromeInit]
+ function iSyndrome = init_Syndrome(r,g,n,k)
+ % function iSyndrome = init_Syndrome(r,g,n,k)
+ 
+ [q, iSyndrome] = gfdeconv(r,g,2);
+ 
+ if(length(iSyndrome) ~= n-k)
+     iSyndrome = [iSyndrome zeros(1,n-k-length(iSyndrome))];
+ end
+\end{lstlisting}
 
 
 
+\begin{lstlisting}[caption=Error detection, style=Code-Matlab, label=lst:ErrorDetection]
+ for i = 1:n
+     % Test of syndrome is equal to one of the error syndromes
+     for b = 1:n
+         % Check if the calculated syndrome is equal to one of the rows in syndrome
+         % table
+         if(isequal(si, syndromes_errorpattern(b,:))==1)
+             % correct bit, if error happened
+             error_vec(i) = 1;
+             r(end) = mod(r(end)+1,2);
+         end
+     end
+     
+     % Right shift the received vector 1 bit
+     ri = circshift(r, [1 1]);
+     % Calculate new syndrome register
+     [q, si] = gfdeconv(ri,g,2);
+     % Set r to ri (make the shift in memory too)
+     r = ri;
+     % zeropad si to compare with the syndrome table
+     if(length(si) ~= n-k)
+         si = [si zeros(1,n-k-length(si))];
+     end
+ end
+\end{lstlisting}
 
 
-
-
-
-
-
+.\newline
+.\newline
 The Meggitt decoder can decode an input message, $r(X)$, which may contain up to 2 errors and return the correct output vector, $v(X)$.
 The Meggitt decoder can be called in Matlab with the function in \codeTitle \ref{lst:Meggitt}
 
