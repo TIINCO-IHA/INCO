@@ -59,58 +59,76 @@ The implemented encoder is a Matlab function, $cyclicEncoder$. The encoder is ab
 \end{lstlisting}
 
 \subsection{Implementation of Main Function}
-\fixme{MAIN HAR ÆNDRET SIG!} \\
-The main function generates a message vector, encodes it into a code vector, transmits it and hereby introduces errors in the code vector, and finally decodes the code vector using Meggitt decoding.
+The main function, $miniproject$, can correct up to two errors where the errors can be specified in numbers and location.
 
-\noindent The main function makes use of the generic cyclic encoder and the Meggitt decoder described above. It is possible to decide how many errors, $t$, should be introduced during transmission, as well as it is possible to manually introduce the error location(s).
-
-\noindent Initially the code length, the message length and the generator polynomial are set. A message vector is generated and by the cyclic encoder encoded into a code vector. 
-
-\noindent Secondly, the number of errors to be introduced are stated and random error location(s) are generated. The code vector is put into the received vector and the bits at the error location(s) in the received vector are flipped. 
-
-\noindent Finally, the received vector is decoded by the Meggitt decoder and it is verified that the decoded vector is equal to the code vector.    
+The first parameter is the error-count which specifies how many errors the function should correct.
+The main function can also be called without any parameters and will set the default error-count to 2   
 
 \begin{lstlisting}[caption=Main Function, style=Code-Matlab, label=lst:refID]
- % This code makes use of the cyclic encoder and the Meggitt decoder 
- addpath('../Encoder');
- addpath('../Meggitt');
+function test = miniproject(t_errors, errorloc)
+% function test = miniproject(t_errors, errorloc)
+% t_errors:       Number of errors to be introduced. Maximum 2. Default 2.
+% errorloc:       Location of the t_errors errors. Should be a vector with
+%                 scalars between 1-15 corresponding to bit location 1-15 (degree 0-14).
+% test:           Returns one if the decoded message, c, is equal to the input
+%                 message, r.
+addpath('../Encoder');
+addpath('../Meggitt');
 
- % Set the code length, the message length and the generator polynomial
- n = 15;
- k = 7;
- g = [1 0 0 0 1 0 1 1 1];
+% Generate message vector
+n = 15;
+k = 7;
+% g(x) = 1+X^4+X^6+X^7+X^8
+g = [1 0 0 0 1 0 1 1 1];
 
- % Generate a message vector by using random numbers in GF(2)
- m = mod(randi(2,1,k),2);
+if(nargin < 1)  % no input parameters
+    t = 2;
+    errorlocation = sort(randi(n,1,t));
+elseif(nargin > 0)
+    t = t_errors;
+    if(nargin < 2)
+        errorlocation = sort(randi(n,1,t));
+    else
+        errorlocation = sort(errorloc);
+    end
+end
 
- % Encode the message vector by the cyclic code encoder function
- c = cyclicEncoding(g,m,n,k);
+% generate random numbers in GF(2)
+m = mod(randi(2,1,k),2);
 
- % Transmit the code vector through an artificial communication channel, i.e.
- % introduce one or two errors to the code vector 
+% Encode message vector by the ciclic code encoder
+c = cyclicEncoding(g,m,n,k);
 
- % State the number of errors, t, to introduce in the code vector (t=1 or t=2)
- t = 1;
- % t = 2;
-
- % Generate random error locations and state them in a sorted array - if there are two errors and they happen to be in the same location then generate two new error locations
- errorlocation = sort(randi(n,1,t)); 
- while(t == 2 && (errorlocation(1)-errorlocation(2)) == 0)
+while(t > 2 && length(unique(errorlocation)) ~= t)
     errorlocation = sort(randi(n,1,t));
     disp('Errorlocation was recalculated!');
- end
+end
+r = c;
 
- % Put the code vector c into the received vector r
- r = c;
+% Flip bit at generated error location i the received vector.
+% Add 1 and modulo 2 for binary addition
+r(errorlocation) = mod(c(errorlocation)+1,2);
 
- % Introduce errors at the generated error location(s) i the received vector by adding 1 and modulo 2 for binary addition (flipping the bits)
- r(errorlocation) = mod(c(errorlocation)+1,2);
+% Decode the received vector by the meggitt decoder
 
- % Decode the received vector by the Meggitt decoder
- res = Meggitt(r)
+[e, r_c, tag] = meggitt_decoder(r, g, n, k);
 
- % Verify that the result of the decoding is equal to the code vector
- isequal(c, res)
+if(isequal(c, r_c) == 0)
+    disp('The codeword was not decoded correct');
+else
+    disp('The codeword was successfully decoded');
+end
+
+c_t = mat2str(c);
+e_t = mat2str(e);
+r_t = mat2str(r);
+rc_t = mat2str(r_c);
+t_out = 'The coded vector is    c = %s.\nAfter transmission is  r = %s.\nThe error vector is    e = %s.\nThe corrected vector r_c = %s\nThe tag from the decoder claims: %s.\n';
+fprintf(t_out,c_t,r_t,e_t,rc_t,tag);
+% clear c_t; clear e_t; clear r_t; clear rc_t; clear t_out;
+
+save variables
+test = isequal(c, r_c);
 \end{lstlisting}
 
 \end{document}
