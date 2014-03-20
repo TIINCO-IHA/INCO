@@ -75,13 +75,14 @@ Finally, adding the right-shifted message polynomial and the remainder polynomia
 
 \subsection{Implementation of Meggitt decoder}
 \label{sec:ImplementMeggittDecoder}
-The Meggitt decoder is able to decode an input message, $r(X)$, which may contain 1 or 2 error and return the correct output vector, $v(X)$.
-If $r(X)$ contains 3 error it the decoder should be able to detect error but not able to correct it.
+The Meggitt decoder is able to decode an input message, $r(X)$, which may contain 1 or 2 errors and return the correct output vector, $v(X)$.
+If $r(X)$ contains 3 errors the decoder should be able to detect the error but not able to correct it.
 
-When calling the Meggitt decoder is start with calculate the error pattern as in section \ref{sec:MeggittDedocerMaterial} matrix \ref{lst:ErrorPattern} and finding the corresponding syndromes matrix \ref{lst:syndromeErrorPattern}.
-In Matlab this is done with the function in \codeTitle \ref{lst:ErrorPatternCreate}
+When calling the Meggitt decoder it first calculates the error pattern as shown in matrix \ref{lst:ErrorPattern}, section \ref{sec:MeggittDedocerMaterial}, and then finds the corresponding syndromes as shown in matrix \ref{lst:syndromeErrorPattern}.
 
-\begin{lstlisting}[caption=Error pattern creation, style=Code-Matlab, label=lst:ErrorPatternCreate]
+In Matlab this is done with the function in \codeTitle \ref{lst:ErrorPatternCreate}:
+
+\begin{lstlisting}[caption=Error Pattern Creation, style=Code-Matlab, label=lst:ErrorPatternCreate]
  function syndromes_errorpattern = generateErrorPattern(g,n,k)
  % generate syndrome error pattern
  
@@ -99,12 +100,11 @@ In Matlab this is done with the function in \codeTitle \ref{lst:ErrorPatternCrea
  end
 \end{lstlisting}
 
-The initiation of the syndrome register is happening next.
-As it was shown in section \ref{sec:Meggitt} the initialization of the syndrome register is the same at making a polynomial division of $S(X)$ and $g(X)$.
-With this knowledge the function in MatLab is as shown in \codeTitle \ref{lst:SyndromeInit}.
-If the syndrome vector is less than $k$, when it don't have any bit in the high end, the syndrome is filled up with zeros so they all have a length of $k$.
+Next is the initiation of the syndrome register.
+As it was shown in section \ref{sec:Meggitt} the initialization of the syndrome register is the same as making a polynomial division of $S(X)$ and $g(X)$. With this knowledge the function is implemented in Matlab is as shown in \codeTitle \ref{lst:SyndromeInit}.
+If the syndrome vector is smaller than $k$, the syndrome is filled up with zeros so they all have a length of $k$.
 
-\begin{lstlisting}[caption=Syndrome initialization, style=Code-Matlab, label=lst:SyndromeInit]
+\begin{lstlisting}[caption=Syndrome Initialization, style=Code-Matlab, label=lst:SyndromeInit]
  function iSyndrome = init_Syndrome(r,g,n,k)
  % function iSyndrome = init_Syndrome(r,g,n,k)
  
@@ -115,12 +115,13 @@ If the syndrome vector is less than $k$, when it don't have any bit in the high 
  end
 \end{lstlisting}
 
-The Meggitt decoder is now ready to decode which is happening in \codeTitle \ref{lst:ErrorDetection}.
-Start to check for whether the syndrome has an error or not, by checking the syndrome with all the syndromes in the $syndrome\_errorpattern$.
-If it has an error the end bit in the buffer, here $r$, is corrected before it is shifted.
-After the shift a new syndrome is calculated and make sure the length is $k$.
+The Meggitt decoder is now ready to decode, and the decoding is shown in \codeTitle \ref{lst:ErrorDetection}.
 
-\begin{lstlisting}[caption=Error detection, style=Code-Matlab, label=lst:ErrorDetection]
+First the decoder checks whether the syndrome has an error or not, by comparing the syndrome with all the syndromes in the $syndromes\_errorpattern$.
+If there is an error the end bit in the buffer, here $r$, is corrected before it is shifted.
+After the shift a new syndrome is calculated and it is ensured, that the length is $k$.
+
+\begin{lstlisting}[caption=Error Detection, style=Code-Matlab, label=lst:ErrorDetection]
  for i = 1:n
      % Test of syndrome is equal to one of the error syndromes
      for b = 1:n
@@ -146,10 +147,11 @@ After the shift a new syndrome is calculated and make sure the length is $k$.
  end
 \end{lstlisting}
 
-After the decoding it sum up all information to create the tag and return the error vector and the code vector.
-This MatLab code is shown in \codeTitle \ref{lst:DecodeReturn}.
+After the decoding the Meggitt decoder sums up all information to create a tag to indicate whether the code is decodalbe or undecodable but detectable, and returns the error vector and the code vector.
 
-\begin{lstlisting}[caption=Meggitt decode return, style=Code-Matlab, label=lst:DecodeReturn]
+This Matlab code for this is shown in \codeTitle \ref{lst:DecodeReturn}.
+
+\begin{lstlisting}[caption=Meggitt Decoder's Return, style=Code-Matlab, label=lst:DecodeReturn]
  if sum(si)~=0 && sum(error_vec) > 2
      tag = 'The received vector contains more than 2 errors';
  elseif sum(si)==0 && sum(error_vec) <= 2 && sum(error_vec) >= 1
