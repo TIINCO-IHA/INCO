@@ -235,6 +235,28 @@ After the 8'th bit the syndrome becomes a all zero vector, which indicates that 
 The only error that is interesting is the last error, therefore when correcting 1 error only the error pattern for error in the rightmost symbol is used.
 In our example the error pattern will be $e(X) = [000000000000001]$.
 When introducing 2 errors correcting the error pattern is extended to the one shown in list: (INDÆST LINK HER MAIKEN!).
+
+\begin{equation}
+syndromeErrorPattern = 
+\begin{bmatrix}
+     0 &    0 &    0 &    1 &    0 &    1 &    1  &   1\\
+     0 &    0 &    1 &    1 &    1 &    0 &    0  &   1\\
+     0 &    1 &    0 &    0 &    1 &    0 &    1  &   1\\
+     1 &    0 &    1 &    0 &    1 &    1 &    1  &   1\\
+     0 &    1 &    1 &    1 &    0 &    0 &    0  &   0\\
+     1 &    1 &    0 &    1 &    1 &    0 &    0  &   1\\
+     1 &    0 &    0 &    1 &    1 &    1 &    0  &   0\\
+     0 &    0 &    0 &    1 &    0 &    1 &    1  &   0\\
+     0 &    0 &    0 &    1 &    0 &    1 &    0  &   1\\
+     0 &    0 &    0 &    1 &    0 &    0 &    1  &   1\\
+     0 &    0 &    0 &    1 &    1 &    1 &    1  &   1\\
+     0 &    0 &    0 &    0 &    0 &    1 &    1  &   1\\
+     0 &    0 &    1 &    1 &    0 &    1 &    1  &   1\\
+     0 &    1 &    0 &    1 &    0 &    1 &    1  &   1\\
+     1 &    0 &    0 &    1 &    0 &    1 &    1  &   1
+\end{bmatrix}
+\end{equation}
+
 Even though the code is looking for 2 error it is still only errors on the rightmost bit in the buffer that are of interest.
 Therefore the error pattern will contain all possible 2 errors where the one is fixed on the to the right.
 To find the corresponding syndrome error pattern matching a specific error pattern the error pattern is divided with the general polynomial.

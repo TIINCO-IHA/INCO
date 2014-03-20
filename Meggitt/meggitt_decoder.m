@@ -1,5 +1,5 @@
 function [error_vec, code_vec, tag] = meggitt_decoder(r, g, n, k)
-% function r_corrected = meggitt_decoder(r, g)
+% function [error_vec, code_vec, tag] = meggitt_decoder(r, g, n, k)
 % Decodes and corrects t errors in the received vector, r, from the generator polynomial, g.
 % Input:
 % r             is the received vector (maybe with errors)
