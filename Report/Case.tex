@@ -73,7 +73,7 @@ Finally, adding the right-shifted message polynomial and the remainder polynomia
 
 
 
-\subsection{Implementation of Meggitt decoder}
+\subsection{Implementation of Meggitt Decoder}
 \label{sec:ImplementMeggittDecoder}
 The Meggitt decoder is able to decode an input message, $r(X)$, which may contain 1 or 2 errors and return the correct output vector, $v(X)$.
 If $r(X)$ contains 3 errors the decoder should be able to detect the error but not able to correct it.
@@ -147,7 +147,7 @@ After the shift a new syndrome is calculated and it is ensured, that the length 
  end
 \end{lstlisting}
 
-After the decoding the Meggitt decoder sums up all information to create a tag to indicate whether the code is decodalbe or undecodable but detectable, and returns the error vector and the code vector.
+After the decoding the Meggitt decoder sums up all information to create a tag to indicate whether the code is decodable or undecodable but detectable, and returns the error vector and the code vector.
 
 This Matlab code for this is shown in \codeTitle \ref{lst:DecodeReturn}.
 
