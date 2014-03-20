@@ -11,6 +11,7 @@ addpath('../Meggitt');
 % Generate message vector
 n = 15;
 k = 7;
+% g(x) = 1+X^4+X^6+X^7+X^8
 g = [1 0 0 0 1 0 1 1 1];
 
 if(nargin < 1)  % no input parameters
