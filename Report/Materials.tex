@@ -179,6 +179,7 @@ Step 2 and 3 is repeated.
 \end{enumerate}
 
 \subsubsection{Meggitt decode example}
+\label{sec:MeggittDedocerMaterial}
 In this example the codeword $ c = [0 1 1 1 1 0 0 0 1 0 0 1 1 0 1] $ is used.
 An error is made on bit 7 which mean $X^6$ is flipped.
 The received vector is: $ r = [0 1 1 1 1 0 {\color{red}1} 0 1 0 0 1 1 0 1] $.
@@ -241,9 +242,31 @@ After the 8'th bit the syndrome becomes an all zero vector, which indicates that
 
 The only error that is interesting is the last error, therefore when correcting 1 error only the error pattern for error in the rightmost symbol is used.
 In our example the error pattern will be $e(X) = [000000000000001]$.
-When introducing 2 errors correcting the error pattern is extended to the one shown in list:\fxnote{INDSÆT LINK HER MAIKEN!}.
+When introducing 2 errors correcting the error pattern is extended to the one shown in the matrix in equation \ref{lst:ErrorPattern} and the corresponding syndromeErrorPattern is shown in the matrix in equation \ref{lst:syndromeErrorPattern}.
+\begin{equation}
+\label{lst:ErrorPattern}
+ErrorPattern = 
+\begin{bmatrix}
+     0 &    0 &    0 &    0 &    0 &    0 &    0  &	 0 &    0 &    0 &    0 &    0 &    0 &    0   &   1\\
+     0 &    0 &    0 &    0 &    0 &    0 &    0  &	 0 &    0 &    0 &    0 &    0 &    0 &    1   &   1\\
+   	 0 &    0 &    0 &    0 &    0 &    0 &    0  &	 0 &    0 &    0 &    0 &    0 &    1 &    0   &   1\\
+     0 &    0 &    0 &    0 &    0 &    0 &    0  &	 0 &    0 &    0 &    0 &    1 &    0 &    0   &   1\\
+     0 &    0 &    0 &    0 &    0 &    0 &    0  &	 0 &    0 &    0 &    1 &    0 &    0 &    0   &   1\\
+     0 &    0 &    0 &    0 &    0 &    0 &    0  &	 0 &    0 &    1 &    0 &    0 &    0 &    0   &   1\\
+     0 &    0 &    0 &    0 &    0 &    0 &    0  &	 0 &    1 &    0 &    0 &    0 &    0 &    0   &   1\\
+     0 &    0 &    0 &    0 &    0 &    0 &    0  &	 1 &    0 &    0 &    0 &    0 &    0 &    0   &   1\\
+     0 &    0 &    0 &    0 &    0 &    0 &    1  &	 0 &    0 &    0 &    0 &    0 &    0 &    0   &   1\\
+     0 &    0 &    0 &    0 &    0 &    1 &    0  &	 0 &    0 &    0 &    0 &    0 &    0 &    0   &   1\\
+     0 &    0 &    0 &    0 &    1 &    0 &    0  &	 0 &    0 &    0 &    0 &    0 &    0 &    0   &   1\\
+     0 &    0 &    0 &    1 &    0 &    0 &    0  &	 0 &    0 &    0 &    0 &    0 &    0 &    0   &   1\\
+     0 &    0 &    1 &    0 &    0 &    0 &    0  &	 0 &    0 &    0 &    0 &    0 &    0 &    0   &   1\\
+     0 &    1 &    0 &    0 &    0 &    0 &    0  &	 0 &    0 &    0 &    0 &    0 &    0 &    0   &   1\\
+     1 &    0 &    0 &    0 &    0 &    0 &    0  &	 0 &    0 &    0 &    0 &    0 &    0 &    0   &   1
+\end{bmatrix}
+\end{equation}
 
 \begin{equation}
+\label{lst:syndromeErrorPattern}
 syndromeErrorPattern = 
 \begin{bmatrix}
      0 &    0 &    0 &    1 &    0 &    1 &    1  &   1\\

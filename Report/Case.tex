@@ -62,7 +62,7 @@ The implemented encoder is a Matlab function, $cyclicEncoder$. The encoder is ab
 The Meggitt decoder is able to decode an input message, $r(X)$, which may contain 1 or 2 error and return the correct output vector, $v(X)$.
 If $r(X)$ contains 3 error it the decoder should be able to detect error but not able to correct it.
 
-When calling the meggitt decoder is start with calculate the error pattern as in \fxnote{HENVISNING meggitt decoder slutning, tabel} and finding the corresponding syndromes.
+When calling the Meggitt decoder is start with calculate the error pattern as in section \ref{sec:MeggittDedocerMaterial} matrix \ref{lst:ErrorPattern} and finding the corresponding syndromes matrix \ref{lst:syndromeErrorPattern}.
 In Matlab this is done with the function in \codeTitle \ref{lst:ErrorPatternCreate}
 
 \begin{lstlisting}[caption=Error pattern creation, style=Code-Matlab, label=lst:ErrorPatternCreate]
